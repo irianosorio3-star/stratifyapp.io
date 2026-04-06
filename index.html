@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>AlgoVault — El estándar del trading algorítmico verificado</title>
+<title>Stratify — El estándar del trading algorítmico verificado</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Outfit:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
@@ -384,13 +384,14 @@ body{background:var(--white);color:var(--ink);font-family:var(--B);font-size:14p
 <nav class="nav">
   <a class="logo" href="#" onclick="gv('landing');return false">
     <div class="lm"><svg viewBox="0 0 18 18" fill="none" width="16" height="16"><polyline points="2,13 9,3 16,13" stroke="#C9A84C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><polyline points="5,13 9,8 13,13" stroke="#C9A84C" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-    <div class="ln">ALGOVAULT</div>
+    <div class="ln">STRATIFY</div>
   </a>
   <div class="nav-links">
     <div class="nl" id="nl-marketplace" onclick="gv('marketplace')">Marketplace</div>
     <div class="nl" id="nl-verify" onclick="gv('verify')">Certificar</div>
     <div class="nl" id="nl-portfolio" onclick="gv('portfolio')">Portfolio</div>
     <div class="nl" id="nl-analytics" onclick="gv('analytics')">Mi Revenue</div>
+    <div class="nl" id="nl-admin" onclick="gv('admin')" style="color:#C0392B;border-bottom:2px solid transparent" id="nl-admin">⚙ Admin</div>
   </div>
   <div class="nav-r">
     <button class="btn-ghost" onclick="openModal('buyer')">Iniciar sesión</button>
@@ -426,7 +427,7 @@ body{background:var(--white);color:var(--ink);font-family:var(--B);font-size:14p
       </h1>
       <p class="hero-desc">
         El 90% de los traders pierde dinero con estrategias sin respaldo real.<br>
-        <strong>AlgoVault es el único marketplace donde cada estrategia pasa por validación cuantitativa verificada antes de publicarse.</strong><br>
+        <strong>Stratify es el único marketplace donde cada estrategia pasa por validación cuantitativa verificada antes de publicarse.</strong><br>
         Sin equity curves inventadas. Sin backtests manipulados. Solo evidencia.
       </p>
       <div class="hero-ctas">
@@ -472,10 +473,10 @@ body{background:var(--white);color:var(--ink);font-family:var(--B);font-size:14p
         <div class="rc-body">
           <div class="rc-pill buy"><span></span>Para compradores</div>
           <div class="rc-h">Accede al edge que ya fue probado.</div>
-          <div class="rc-p">Para de perder tiempo en estrategias sin respaldo. En AlgoVault solo encontrarás sistemas que pasaron validación cuantitativa real — backtest, robustez, y cuenta real verificada con terceros.</div>
+          <div class="rc-p">Para de perder tiempo en estrategias sin respaldo. En Stratify solo encontrarás sistemas que pasaron validación cuantitativa real — backtest, robustez, y cuenta real verificada con terceros.</div>
           <ul class="rc-perks">
             <li class="rc-perk"><div class="perk-ck buy">✓</div>Catálogo de 1,847+ estrategias certificadas — gratis</li>
-            <li class="rc-perk"><div class="perk-ck buy">✓</div>Score AlgoVault transparente y trazable en cada estrategia</li>
+            <li class="rc-perk"><div class="perk-ck buy">✓</div>Score Stratify transparente y trazable en cada estrategia</li>
             <li class="rc-perk"><div class="perk-ck buy">✓</div>Portfolio Builder con correlación y análisis de riesgo</li>
             <li class="rc-perk"><div class="perk-ck buy">✓</div>Equity curve real + retornos mensuales verificados</li>
             <li class="rc-perk"><div class="perk-ck buy">✓</div>14 días de prueba gratuita por estrategia</li>
@@ -494,7 +495,7 @@ body{background:var(--white);color:var(--ink);font-family:var(--B);font-size:14p
         <div class="rc-body">
           <div class="rc-pill sell"><span></span>Para creadores</div>
           <div class="rc-h">Convierte tu algoritmo en ingresos recurrentes.</div>
-          <div class="rc-p">Si tienes una estrategia con resultados reales, AlgoVault es el único lugar donde el mercado la valora correctamente. La certificación justifica el precio. 12,400+ traders activos esperan lo que tú ya construiste.</div>
+          <div class="rc-p">Si tienes una estrategia con resultados reales, Stratify es el único lugar donde el mercado la valora correctamente. La certificación justifica el precio. 12,400+ traders activos esperan lo que tú ya construiste.</div>
           <ul class="rc-perks">
             <li class="rc-perk"><div class="perk-ck sell">✓</div>70–80% de comisión directa — sin intermediarios</li>
             <li class="rc-perk"><div class="perk-ck sell">✓</div>Dashboard de revenue en tiempo real + analytics</li>
@@ -541,7 +542,7 @@ body{background:var(--white);color:var(--ink);font-family:var(--B);font-size:14p
     <div class="testi-grid">
       <div class="tcard">
         <div class="tcard-stars"><span class="tstar">★</span><span class="tstar">★</span><span class="tstar">★</span><span class="tstar">★</span><span class="tstar">★</span></div>
-        <div class="tcard-q">"Llevaba 3 años probando robots en MQL5 Market sin éxito. En AlgoVault encontré una estrategia Nivel 4 con 14 meses de track record real verificado. Llevo 6 meses usándola. Profit Factor 2.1 en vivo."</div>
+        <div class="tcard-q">"Llevaba 3 años probando robots en MQL5 Market sin éxito. En Stratify encontré una estrategia Nivel 4 con 14 meses de track record real verificado. Llevo 6 meses usándola. Profit Factor 2.1 en vivo."</div>
         <div class="tcard-author"><div class="tcard-av">CM</div><div><div class="tcard-name">Carlos M.</div><div class="tcard-role">Trader independiente · México</div></div></div>
       </div>
       <div class="tcard">
@@ -776,7 +777,7 @@ body{background:var(--white);color:var(--ink);font-family:var(--B);font-size:14p
             <div class="seller-card">
               <div class="seller-top">
                 <div class="seller-av" id="d-sav"></div>
-                <div><div class="seller-name" id="d-sname"></div><div class="seller-role">Creador verificado · AlgoVault Pro</div></div>
+                <div><div class="seller-name" id="d-sname"></div><div class="seller-role">Creador verificado · Stratify Pro</div></div>
               </div>
               <div class="seller-stats">
                 <div><div class="ss-v" id="d-ssold"></div><div class="ss-l">Ventas</div></div>
@@ -1086,7 +1087,7 @@ body{background:var(--white);color:var(--ink);font-family:var(--B);font-size:14p
 
       <!-- STEP 5 — SCORE RESULT -->
       <div class="vstep" id="vs-5">
-        <div class="vstep-h">Tu score AlgoVault</div>
+        <div class="vstep-h">Tu score Stratify</div>
         <div class="vstep-s">Calculado en base a los datos que ingresaste. Puedes mejorar el score añadiendo track record real.</div>
         <div class="score-result">
           <div class="score-circle-wrap">
@@ -1098,7 +1099,7 @@ body{background:var(--white);color:var(--ink);font-family:var(--B);font-size:14p
               <text x="80" y="74" text-anchor="middle" font-family="IBM Plex Mono" font-size="36" font-weight="700" fill="#0D0F14" id="score-num">0</text>
               <text x="80" y="94" text-anchor="middle" font-family="IBM Plex Mono" font-size="11" fill="#6B7694">/ 100</text>
             </svg>
-            <div class="score-ring-label">Score AlgoVault</div>
+            <div class="score-ring-label">Score Stratify</div>
           </div>
           <div>
             <div class="cert-result-lvl" id="cert-result-lvl" style="background:var(--g3);border:.5px solid rgba(201,168,76,.3)">
@@ -1437,7 +1438,7 @@ body{background:var(--white);color:var(--ink);font-family:var(--B);font-size:14p
         <select class="finput"><option>MetaTrader 5</option><option>Python / Pandas</option><option>NinjaTrader 8</option><option>TradingView</option></select>
       </div>
       <button class="reg-btn" id="reg-btn" onclick="register()">Crear cuenta como Comprador →</button>
-      <div class="modal-fine">Al registrarte aceptas los Términos de uso y la Política de privacidad de AlgoVault</div>
+      <div class="modal-fine">Al registrarte aceptas los Términos de uso y la Política de privacidad de Stratify</div>
     </div>
   </div>
 </div>
@@ -1557,7 +1558,7 @@ function openDetail(id) {
     <div class="metric-box"><div class="mb-l">Max Drawdown</div><div class="mb-v ${ddColor(s.dd)}">${s.dd}%</div><div class="mb-s">${s.dd>=-10?'Controlado':'Moderado'}</div></div>
     <div class="metric-box"><div class="mb-l">Win Rate</div><div class="mb-v gold">${s.wr}%</div><div class="mb-s">${s.trades} trades</div></div>
     <div class="metric-box"><div class="mb-l">Track Record</div><div class="mb-v info" style="color:var(--info)">${s.months}m live</div><div class="mb-s">Myfxbook verificado</div></div>
-    <div class="metric-box"><div class="mb-l">Score AlgoVault</div><div class="mb-v gold">${s.score}/100</div><div class="mb-s">Top ${Math.max(5,Math.round((100-s.score)/8)*4)}%</div></div>`;
+    <div class="metric-box"><div class="mb-l">Score Stratify</div><div class="mb-v gold">${s.score}/100</div><div class="mb-s">Top ${Math.max(5,Math.round((100-s.score)/8)*4)}%</div></div>`;
   document.getElementById('d-eqlbl').textContent = `Equity curve · ${s.months}m live · Cuenta real`;
   if(eqChart){eqChart.destroy();eqChart=null;}
   if(distChart){distChart.destroy();distChart=null;}
@@ -1883,5 +1884,375 @@ function drawPbCharts() {
 // Init portfolio charts on load
 setTimeout(()=>{ if(document.getElementById('pb-eq-chart')) drawPbCharts(); }, 200);
 </script>
+<!-- ════════════════════════════════════════
+     ADMIN PANEL
+════════════════════════════════════════ -->
+<div id="view-admin" class="view">
+<style>
+.admin-wrap{max-width:1300px;margin:0 auto;padding:1.75rem 2rem}
+.admin-hdr{background:linear-gradient(135deg,#1a0a0a 0%,#2a0f0f 100%);border-radius:14px;padding:1.5rem 2rem;margin-bottom:1.75rem;border:.5px solid rgba(192,57,43,.3);position:relative;overflow:hidden}
+.admin-hdr::after{content:'';position:absolute;top:-40px;right:-40px;width:200px;height:200px;background:radial-gradient(circle,rgba(192,57,43,.08) 0%,transparent 70%)}
+.admin-kicker{font-size:10px;font-family:var(--M);text-transform:uppercase;letter-spacing:2px;color:#C0392B;margin-bottom:5px}
+.admin-hdr-h{font-family:var(--D);font-size:26px;color:#fff;position:relative;z-index:1}
+.admin-hdr-s{font-size:12px;color:var(--mid);font-family:var(--M);margin-top:4px;position:relative;z-index:1}
+
+.admin-layout{display:grid;grid-template-columns:1fr 300px;gap:1.5rem;align-items:start}
+.admin-metric-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:1.5rem}
+.adm{background:#fff;border:.5px solid var(--bd);border-radius:10px;padding:14px 16px}
+.adm-l{font-size:10px;font-family:var(--M);text-transform:uppercase;letter-spacing:.8px;color:var(--mid);margin-bottom:5px}
+.adm-v{font-size:24px;font-weight:700;font-family:var(--M);color:var(--ink)}
+.adm-s{font-size:11px;color:var(--mid);margin-top:2px;font-family:var(--M)}
+
+/* QUEUE */
+.queue-tabs{display:flex;gap:0;margin-bottom:1.25rem;background:var(--white);border:.5px solid var(--bd);border-radius:8px;padding:3px;width:fit-content}
+.qtab{padding:7px 20px;border-radius:5px;font-size:11px;font-family:var(--M);text-transform:uppercase;letter-spacing:.6px;color:var(--mid);cursor:pointer;transition:all .15s}
+.qtab.active{background:#fff;color:var(--ink);font-weight:600;box-shadow:0 1px 4px rgba(0,0,0,.08)}
+
+.strat-queue{list-style:none}
+.sq-item{background:#fff;border:.5px solid var(--bd);border-radius:12px;padding:1.1rem 1.25rem;margin-bottom:10px;transition:all .2s}
+.sq-item:hover{border-color:var(--gold);box-shadow:0 4px 20px rgba(13,15,20,.07)}
+.sq-item.approved{border-left:3px solid var(--gain);background:rgba(26,122,74,.02)}
+.sq-item.rejected{border-left:3px solid var(--loss);background:rgba(192,57,43,.02);opacity:.7}
+.sq-top{display:flex;align-items:flex-start;gap:12px;margin-bottom:.75rem}
+.sq-ico{width:40px;height:40px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:var(--M);font-size:11px;font-weight:600;flex-shrink:0;border:.5px solid var(--bd)}
+.sq-info{flex:1}
+.sq-name{font-size:14px;font-weight:600;color:var(--ink);margin-bottom:2px}
+.sq-meta{font-size:11px;color:var(--mid);font-family:var(--M)}
+.sq-status{padding:3px 9px;border-radius:4px;font-size:10px;font-family:var(--M);font-weight:600;text-transform:uppercase;letter-spacing:.5px}
+.st-pending{background:var(--warn2);color:var(--warn);border:.5px solid rgba(184,134,11,.2)}
+.st-approved{background:var(--gain2);color:var(--gain);border:.5px solid rgba(26,122,74,.25)}
+.st-rejected{background:var(--loss2);color:var(--loss);border:.5px solid rgba(192,57,43,.2)}
+.st-review{background:var(--info2);color:var(--info);border:.5px solid rgba(24,95,165,.2)}
+
+.sq-metrics{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:.85rem;background:var(--white);border-radius:6px;padding:8px 10px}
+.sqm{text-align:center}
+.sqm-l{font-size:9px;font-family:var(--M);text-transform:uppercase;letter-spacing:.4px;color:var(--mid)}.sqm-v{font-size:13px;font-weight:600;font-family:var(--M);margin-top:2px}
+
+.sq-actions{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.btn-approve{padding:8px 20px;border:none;background:var(--gain);color:#fff;font-family:var(--B);font-size:12px;font-weight:600;border-radius:5px;cursor:pointer;transition:all .15s}
+.btn-approve:hover{background:#1f9057}
+.btn-reject{padding:8px 18px;border:.5px solid var(--loss);background:transparent;color:var(--loss);font-family:var(--B);font-size:12px;font-weight:600;border-radius:5px;cursor:pointer;transition:all .15s}
+.btn-reject:hover{background:var(--loss2)}
+.btn-review{padding:8px 16px;border:.5px solid var(--info);background:transparent;color:var(--info);font-family:var(--B);font-size:12px;font-weight:500;border-radius:5px;cursor:pointer;transition:all .15s}
+.btn-review:hover{background:var(--info2)}
+.btn-detail{padding:8px 14px;border:.5px solid var(--bd2);background:transparent;color:var(--mid);font-family:var(--B);font-size:12px;border-radius:5px;cursor:pointer;transition:all .15s;margin-left:auto}
+.btn-detail:hover{color:var(--ink);border-color:var(--bd2)}
+.sq-note{font-size:11px;color:var(--mid);font-family:var(--M);font-style:italic;margin-top:6px}
+
+/* ADMIN SIDEBAR */
+.admin-sidebar{display:flex;flex-direction:column;gap:12px;position:sticky;top:68px}
+.admin-card{background:#fff;border:.5px solid var(--bd);border-radius:12px;overflow:hidden}
+.ac-hd{padding:11px 14px;background:var(--ink)}.ac-t{font-size:10px;font-family:var(--M);text-transform:uppercase;letter-spacing:1.5px;color:var(--gold)}
+.ac-body{padding:12px 14px}
+.ac-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:.5px solid var(--bd);font-size:11px;font-family:var(--M)}
+.ac-row:last-child{border-bottom:none}.ac-l{color:var(--mid)}.ac-v{font-weight:600;color:var(--ink)}
+
+/* MODAL DETAIL */
+.modal-detail-ov{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(13,15,20,.9);z-index:700;display:none;align-items:center;justify-content:center;padding:1rem}
+.modal-detail-ov.open{display:flex}
+.modal-detail{background:#fff;border-radius:16px;width:100%;max-width:680px;max-height:90vh;overflow-y:auto;border:.5px solid var(--bd2);position:relative;animation:slideUp .25s ease}
+.md-hd{padding:1.5rem 2rem;background:var(--ink);position:sticky;top:0;z-index:1}
+.md-title{font-family:var(--D);font-size:22px;color:#fff;margin-bottom:3px}
+.md-sub{font-size:11px;color:var(--mid);font-family:var(--M)}
+.md-close{position:absolute;top:14px;right:14px;width:30px;height:30px;border-radius:50%;background:var(--ink3);border:.5px solid rgba(255,255,255,.1);color:var(--mid);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px;transition:all .15s}
+.md-close:hover{color:#fff}
+.md-body{padding:1.5rem 2rem}
+.md-section{margin-bottom:1.25rem}
+.md-s-title{font-size:10px;font-family:var(--M);text-transform:uppercase;letter-spacing:1.2px;color:var(--gold);margin-bottom:.6rem}
+.md-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.md-m{background:var(--white);border:.5px solid var(--bd);border-radius:7px;padding:10px 12px}
+.md-ml{font-size:10px;font-family:var(--M);text-transform:uppercase;letter-spacing:.4px;color:var(--mid)}.md-mv{font-size:18px;font-weight:600;font-family:var(--M);margin-top:2px}
+.md-chart{height:140px;position:relative;margin-top:8px}
+.md-actions{display:flex;gap:8px;padding:1.25rem 2rem;border-top:.5px solid var(--bd);background:var(--white);position:sticky;bottom:0}
+.md-approve{flex:1;padding:12px;border:none;background:var(--gain);color:#fff;font-family:var(--B);font-size:14px;font-weight:700;border-radius:6px;cursor:pointer;transition:all .15s}
+.md-approve:hover{background:#1f9057}
+.md-reject{flex:1;padding:12px;border:.5px solid var(--loss);background:transparent;color:var(--loss);font-family:var(--B);font-size:14px;font-weight:600;border-radius:6px;cursor:pointer;transition:all .15s}
+.md-reject:hover{background:var(--loss2)}
+.rejection-reason{width:100%;padding:9px 11px;background:var(--white);border:.5px solid var(--bd2);border-radius:5px;color:var(--ink);font-family:var(--M);font-size:12px;outline:none;resize:none;margin-top:8px}
+.rejection-reason:focus{border-color:var(--loss)}
+</style>
+
+<div class="admin-wrap">
+  <div class="admin-hdr">
+    <div class="admin-kicker">Panel de administrador · Solo acceso autorizado</div>
+    <div class="admin-hdr-h">Gestión de estrategias</div>
+    <div class="admin-hdr-s">Revisa, aprueba o rechaza las estrategias enviadas por los creadores antes de publicarse en el marketplace</div>
+  </div>
+
+  <div class="admin-metric-row">
+    <div class="adm"><div class="adm-l">Pendientes de revisión</div><div class="adm-v" style="color:var(--warn)" id="cnt-pending">4</div><div class="adm-s">Requieren acción</div></div>
+    <div class="adm"><div class="adm-l">Aprobadas hoy</div><div class="adm-v gain" id="cnt-approved">3</div><div class="adm-s">Publicadas en marketplace</div></div>
+    <div class="adm"><div class="adm-l">Rechazadas hoy</div><div class="adm-v loss" id="cnt-rejected">1</div><div class="adm-s">Notificación enviada al creador</div></div>
+    <div class="adm"><div class="adm-l">Total en marketplace</div><div class="adm-v">1,847</div><div class="adm-s">Estrategias activas</div></div>
+  </div>
+
+  <div class="admin-layout">
+    <div>
+      <div class="queue-tabs">
+        <div class="qtab active" onclick="filterQueue('all',this)">Todas (8)</div>
+        <div class="qtab" onclick="filterQueue('pending',this)">Pendientes (4)</div>
+        <div class="qtab" onclick="filterQueue('review',this)">En revisión (1)</div>
+        <div class="qtab" onclick="filterQueue('approved',this)">Aprobadas (3)</div>
+        <div class="qtab" onclick="filterQueue('rejected',this)">Rechazadas (1)</div>
+      </div>
+
+      <ul class="strat-queue" id="queue-list"></ul>
+    </div>
+
+    <!-- SIDEBAR -->
+    <div class="admin-sidebar">
+      <div class="admin-card">
+        <div class="ac-hd"><div class="ac-t">Criterios de aprobación</div></div>
+        <div class="ac-body">
+          <div class="ac-row"><span class="ac-l">Profit Factor mín.</span><span class="ac-v gain">≥ 1.3</span></div>
+          <div class="ac-row"><span class="ac-l">Sharpe Ratio mín.</span><span class="ac-v gain">≥ 0.8</span></div>
+          <div class="ac-row"><span class="ac-l">Max Drawdown máx.</span><span class="ac-v loss">≤ 30%</span></div>
+          <div class="ac-row"><span class="ac-l">Trades mínimos</span><span class="ac-v">200+</span></div>
+          <div class="ac-row"><span class="ac-l">Histórico mínimo</span><span class="ac-v">3 años</span></div>
+          <div class="ac-row"><span class="ac-l">Score mínimo</span><span class="ac-v gold">40/100</span></div>
+        </div>
+      </div>
+
+      <div class="admin-card">
+        <div class="ac-hd"><div class="ac-t">Actividad reciente</div></div>
+        <div class="ac-body">
+          <div class="ac-row"><span class="ac-l">✓ NQ Scalper v2</span><span class="ac-v gain" style="font-size:10px">APROBADA</span></div>
+          <div class="ac-row"><span class="ac-l">✗ XAUUSD Bot</span><span class="ac-v loss" style="font-size:10px">RECHAZADA</span></div>
+          <div class="ac-row"><span class="ac-l">✓ EUR Momentum</span><span class="ac-v gain" style="font-size:10px">APROBADA</span></div>
+          <div class="ac-row"><span class="ac-l">✓ SP500 Daily</span><span class="ac-v gain" style="font-size:10px">APROBADA</span></div>
+        </div>
+      </div>
+
+      <div class="admin-card">
+        <div class="ac-hd"><div class="ac-t">Tiempo promedio revisión</div></div>
+        <div class="ac-body">
+          <div style="font-size:32px;font-weight:700;font-family:var(--M);color:var(--ink);margin-bottom:4px">18h</div>
+          <div style="font-size:11px;color:var(--mid);font-family:var(--M)">Objetivo: menos de 24 horas desde el envío del creador</div>
+          <div style="margin-top:10px;height:6px;background:var(--ghost);border-radius:3px;overflow:hidden"><div style="width:75%;height:100%;background:var(--gain);border-radius:3px"></div></div>
+          <div style="font-size:10px;color:var(--mid);font-family:var(--M);margin-top:4px">75% de estrategias revisadas en &lt;24h este mes</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL DETALLE ESTRATEGIA -->
+<div class="modal-detail-ov" id="modal-detail-ov" onclick="closeDetailModal(event)">
+  <div class="modal-detail">
+    <div class="md-hd">
+      <div class="md-title" id="md-title">Nasdaq Momentum v4</div>
+      <div class="md-sub" id="md-sub">por TradingPro_MX · Enviado hace 2 horas</div>
+      <button class="md-close" onclick="document.getElementById('modal-detail-ov').classList.remove('open')">×</button>
+    </div>
+    <div class="md-body">
+      <div class="md-section">
+        <div class="md-s-title">Métricas del backtest</div>
+        <div class="md-metrics" id="md-metrics"></div>
+      </div>
+      <div class="md-section">
+        <div class="md-s-title">Equity curve</div>
+        <div class="md-chart"><canvas id="md-eq-chart"></canvas></div>
+      </div>
+      <div class="md-section">
+        <div class="md-s-title">Información del creador</div>
+        <div style="background:var(--white);border:.5px solid var(--bd);border-radius:8px;padding:12px 14px">
+          <div id="md-creator-info" style="font-size:12px;font-family:var(--M);color:var(--mid);line-height:2"></div>
+        </div>
+      </div>
+      <div class="md-section" id="md-reject-section" style="display:none">
+        <div class="md-s-title">Motivo del rechazo</div>
+        <textarea class="rejection-reason" rows="3" id="rejection-reason-txt" placeholder="Ej: Profit Factor insuficiente (1.1 < mínimo 1.3). Drawdown excesivo (38%). Recomendamos optimizar la estrategia y volver a enviar."></textarea>
+      </div>
+    </div>
+    <div class="md-actions">
+      <button class="md-reject" id="md-reject-btn" onclick="handleRejectModal()">✗ Rechazar estrategia</button>
+      <button class="md-approve" id="md-approve-btn" onclick="handleApproveModal()">✓ Aprobar y publicar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════
+// ADMIN PANEL
+// ══════════════════════════════════
+const QUEUE = [
+  {id:'q1',name:'BTC Neural Network v2',author:'CryptoQuant_AR',submitted:'Hace 1 hora',cls:'ico-bt',code:'BT',pf:2.18,sr:1.63,dd:19.4,wr:54,trades:427,yrs:3.5,score:72,price:449,status:'pending',eq:[100,106,112,109,118,125,121,130,138,134,144,152,149,158,165,162,172,180]},
+  {id:'q2',name:'EURUSD Scalper Pro',author:'FxTrader_MX',submitted:'Hace 3 horas',cls:'ico-fx',code:'FX',pf:1.44,sr:0.92,dd:24.1,wr:51,trades:891,yrs:4.0,score:55,price:199,status:'pending',eq:[100,102,104,103,106,105,108,107,110,109,112,111,114,113,116,115,118,117]},
+  {id:'q3',name:'Gold Momentum AI',author:'QuantGold_BR',submitted:'Hace 5 horas',cls:'ico-au',code:'AU',pf:2.85,sr:2.24,dd:8.7,wr:62,trades:318,yrs:5.5,score:93,price:799,status:'pending',eq:[100,108,117,113,124,132,128,140,152,147,160,168,164,176,185,181,193,202]},
+  {id:'q4',name:'SP500 Reversal System',author:'WallSt_Quant',submitted:'Hace 6 horas',cls:'ico-sp',code:'SP',pf:1.21,sr:0.74,dd:33.8,wr:48,trades:156,yrs:2.0,score:28,price:149,status:'pending',eq:[100,98,102,96,101,97,103,99,104,100,98,102,97,101,96,100,95,99]},
+  {id:'q5',name:'Nasdaq Breakout v3',author:'TradingPro_MX',submitted:'Hace 8 horas',cls:'ico-nq',code:'NQ',pf:1.98,sr:1.51,dd:14.2,wr:57,trades:634,yrs:4.0,score:78,price:399,status:'review',eq:[100,105,111,108,115,112,120,117,124,121,128,125,132,130,137,135,141,139]},
+  {id:'q6',name:'NQ Momentum Alpha v4',author:'TradingPro_MX',submitted:'Ayer 10:30',cls:'ico-nq',code:'NQ',pf:2.41,sr:1.94,dd:11.8,wr:60,trades:756,yrs:4.5,score:86,price:549,status:'approved',eq:[100,108,116,113,122,119,130,127,138,135,146,143,155,152,162,159,170,168]},
+  {id:'q7',name:'GBPUSD Range Trader',author:'LondonFX_UK',submitted:'Ayer 09:15',cls:'ico-fx',code:'FX',pf:1.78,sr:1.34,dd:16.3,wr:55,trades:512,yrs:3.0,score:67,price:279,status:'approved',eq:[100,104,108,106,111,109,114,112,117,115,120,118,123,121,126,124,129,127]},
+  {id:'q8',name:'XAUUSD High Risk Bot',author:'RiskyTrader_99',submitted:'Ayer 08:00',cls:'ico-au',code:'AU',pf:0.98,sr:0.61,dd:47.2,wr:43,trades:89,yrs:1.0,score:12,price:99,status:'rejected',eq:[100,112,95,118,88,105,78,98,82,107,76,95,71,100,75,88,68,84]},
+];
+
+let currentQueueFilter = 'all';
+let currentDetailId = null;
+let mdEqChart = null;
+
+function renderQueue(filter) {
+  currentQueueFilter = filter;
+  const list = document.getElementById('queue-list');
+  const items = filter === 'all' ? QUEUE : QUEUE.filter(q => q.status === filter);
+  
+  if(items.length === 0) {
+    list.innerHTML = `<li style="text-align:center;padding:2rem;color:var(--mid);font-family:var(--M);font-size:12px">No hay estrategias en esta categoría</li>`;
+    return;
+  }
+
+  list.innerHTML = items.map(q => {
+    const pfC = q.pf>=1.5?'gain':q.pf>=1.3?'gold':'loss';
+    const srC = q.sr>=1.5?'gain':q.sr>=0.8?'gold':'loss';
+    const ddC = q.dd<=15?'gain':q.dd<=30?'gold':'loss';
+    const scoreC = q.score>=70?'gain':q.score>=40?'gold':'loss';
+    const statusMap = {pending:'st-pending',approved:'st-approved',rejected:'st-rejected',review:'st-review'};
+    const statusLabel = {pending:'PENDIENTE',approved:'APROBADA',rejected:'RECHAZADA',review:'EN REVISIÓN'};
+    const passReqs = q.pf>=1.3 && q.sr>=0.8 && q.dd<=30 && q.trades>=200 && q.yrs>=3 && q.score>=40;
+    
+    const actionBtns = q.status === 'pending' || q.status === 'review' ? `
+      <button class="btn-approve" onclick="approveStrat('${q.id}')">✓ Aprobar</button>
+      <button class="btn-reject" onclick="rejectStrat('${q.id}')">✗ Rechazar</button>
+      <button class="btn-review" onclick="openDetailModal('${q.id}')">Ver detalle completo</button>
+    ` : q.status === 'approved' ? `
+      <span style="font-size:11px;color:var(--gain);font-family:var(--M)">✓ Publicada en marketplace</span>
+      <button class="btn-detail" style="margin-left:0" onclick="openDetailModal('${q.id}')">Ver detalle</button>
+    ` : `
+      <span style="font-size:11px;color:var(--loss);font-family:var(--M)">✗ Rechazada — Notificación enviada</span>
+      <button class="btn-detail" style="margin-left:0" onclick="openDetailModal('${q.id}')">Ver detalle</button>
+    `;
+
+    return `<li class="sq-item ${q.status==='approved'?'approved':q.status==='rejected'?'rejected':''}" id="sqitem-${q.id}">
+      <div class="sq-top">
+        <div class="sq-ico ${q.cls}">${q.code}</div>
+        <div class="sq-info">
+          <div class="sq-name">${q.name}</div>
+          <div class="sq-meta">por ${q.author} · Enviado: ${q.submitted} · Precio propuesto: $${q.price} USD</div>
+        </div>
+        <span class="sq-status ${statusMap[q.status]}">${statusLabel[q.status]}</span>
+      </div>
+      <div class="sq-metrics">
+        <div class="sqm"><div class="sqm-l">Profit Factor</div><div class="sqm-v ${pfC}">${q.pf}</div></div>
+        <div class="sqm"><div class="sqm-l">Sharpe</div><div class="sqm-v ${srC}">${q.sr}</div></div>
+        <div class="sqm"><div class="sqm-l">Max DD</div><div class="sqm-v ${ddC}">${q.dd}%</div></div>
+        <div class="sqm"><div class="sqm-l">Trades</div><div class="sqm-v ${q.trades>=200?'gain':'loss'}">${q.trades}</div></div>
+        <div class="sqm"><div class="sqm-l">Score</div><div class="sqm-v ${scoreC}">${q.score}/100</div></div>
+      </div>
+      ${!passReqs && (q.status==='pending'||q.status==='review') ? `<div style="background:var(--loss2);border:.5px solid rgba(192,57,43,.2);border-radius:6px;padding:7px 10px;margin-bottom:.75rem;font-size:11px;color:var(--loss);font-family:var(--M)">⚠ No cumple requisitos mínimos — ${q.pf<1.3?'PF insuficiente. ':''}${q.sr<0.8?'Sharpe bajo. ':''}${q.dd>30?'DD excesivo. ':''}${q.trades<200?'Pocos trades. ':''}${q.yrs<3?'Histórico insuficiente. ':''}</div>` : ''}
+      <div class="sq-actions">${actionBtns}</div>
+    </li>`;
+  }).join('');
+
+  updateCounts();
+}
+
+function filterQueue(filter, el) {
+  document.querySelectorAll('.qtab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  renderQueue(filter);
+}
+
+function approveStrat(id) {
+  const q = QUEUE.find(x=>x.id===id);
+  if(!q) return;
+  q.status = 'approved';
+  renderQueue(currentQueueFilter);
+  showToast(`✓ "${q.name}" aprobada y publicada en el marketplace`,'gain');
+  updateCounts();
+}
+
+function rejectStrat(id) {
+  const q = QUEUE.find(x=>x.id===id);
+  if(!q) return;
+  const reason = prompt(`Motivo del rechazo para "${q.name}":\n(Se enviará automáticamente al creador)`, 'Profit Factor insuficiente. Drawdown excesivo. Por favor optimiza la estrategia y vuelve a enviar.');
+  if(reason === null) return;
+  q.status = 'rejected';
+  renderQueue(currentQueueFilter);
+  showToast(`✗ "${q.name}" rechazada — notificación enviada a ${q.author}`,'loss');
+  updateCounts();
+}
+
+function updateCounts() {
+  const pending = QUEUE.filter(q=>q.status==='pending').length;
+  const approved = QUEUE.filter(q=>q.status==='approved').length;
+  const rejected = QUEUE.filter(q=>q.status==='rejected').length;
+  const pEl=document.getElementById('cnt-pending'),aEl=document.getElementById('cnt-approved'),rEl=document.getElementById('cnt-rejected');
+  if(pEl) pEl.textContent = pending;
+  if(aEl) aEl.textContent = approved;
+  if(rEl) rEl.textContent = rejected;
+}
+
+function openDetailModal(id) {
+  const q = QUEUE.find(x=>x.id===id);
+  if(!q) return;
+  currentDetailId = id;
+  document.getElementById('modal-detail-ov').classList.add('open');
+  document.getElementById('md-title').textContent = q.name;
+  document.getElementById('md-sub').textContent = `por ${q.author} · ${q.submitted} · $${q.price} USD`;
+  const pfC = q.pf>=1.5?'gain':q.pf>=1.3?'gold':'loss';
+  const srC = q.sr>=1.5?'gain':q.sr>=0.8?'gold':'loss';
+  const ddC = q.dd<=15?'gain':q.dd<=30?'gold':'loss';
+  document.getElementById('md-metrics').innerHTML = `
+    <div class="md-m"><div class="md-ml">Profit Factor</div><div class="md-mv ${pfC}">${q.pf} ${q.pf>=1.3?'✓':'✗'}</div></div>
+    <div class="md-m"><div class="md-ml">Sharpe Ratio</div><div class="md-mv ${srC}">${q.sr} ${q.sr>=0.8?'✓':'✗'}</div></div>
+    <div class="md-m"><div class="md-ml">Max Drawdown</div><div class="md-mv ${ddC}">${q.dd}% ${q.dd<=30?'✓':'✗'}</div></div>
+    <div class="md-m"><div class="md-ml">Win Rate</div><div class="md-mv gold">${q.wr}%</div></div>
+    <div class="md-m"><div class="md-ml">Total trades</div><div class="md-mv ${q.trades>=200?'gain':'loss'}">${q.trades} ${q.trades>=200?'✓':'✗'}</div></div>
+    <div class="md-m"><div class="md-ml">Score Stratify</div><div class="md-mv ${q.score>=70?'gain':q.score>=40?'gold':'loss'}">${q.score}/100</div></div>`;
+  document.getElementById('md-creator-info').innerHTML = `
+    Creador: <strong>${q.author}</strong><br>
+    Estrategias publicadas: <strong>${Math.floor(Math.random()*5)+1}</strong> · Rating promedio: <strong>4.${Math.floor(Math.random()*3)+6} ★</strong><br>
+    Cuenta verificada: <strong style="color:var(--gain)">Sí</strong> · Plan Creator activo: <strong style="color:var(--gain)">Sí</strong>`;
+  const showActions = q.status === 'pending' || q.status === 'review';
+  document.getElementById('md-approve-btn').style.display = showActions ? 'block' : 'none';
+  document.getElementById('md-reject-btn').style.display = showActions ? 'block' : 'none';
+  document.getElementById('md-reject-section').style.display = 'none';
+  if(mdEqChart){mdEqChart.destroy();mdEqChart=null;}
+  setTimeout(()=>{
+    const cv = document.getElementById('md-eq-chart');
+    if(!cv) return;
+    const col = q.score>=70?'#C9A84C':q.score>=40?'#1A7A4A':'#C0392B';
+    mdEqChart = new Chart(cv,{type:'line',data:{labels:q.eq.map((_,i)=>i),datasets:[{data:q.eq.map(v=>Math.round(v*100)),borderColor:col,borderWidth:2,fill:true,backgroundColor:col==='#C9A84C'?'rgba(201,168,76,.08)':'rgba(26,122,74,.08)',tension:.4,pointRadius:0}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{display:false},y:{ticks:{color:'#6B7694',font:{size:9,family:'IBM Plex Mono'},callback:v=>'$'+v.toLocaleString()},grid:{color:'rgba(61,74,107,.08)'}}}}});
+  }, 80);
+}
+
+function handleApproveModal() {
+  const id = currentDetailId;
+  document.getElementById('modal-detail-ov').classList.remove('open');
+  approveStrat(id);
+}
+
+function handleRejectModal() {
+  const sec = document.getElementById('md-reject-section');
+  const btn = document.getElementById('md-reject-btn');
+  if(sec.style.display === 'none') {
+    sec.style.display = 'block';
+    btn.textContent = '✗ Confirmar rechazo';
+    btn.style.background = 'var(--loss)';
+    btn.style.color = '#fff';
+  } else {
+    const id = currentDetailId;
+    document.getElementById('modal-detail-ov').classList.remove('open');
+    rejectStrat(id);
+  }
+}
+
+function closeDetailModal(e) {
+  if(e.target === document.getElementById('modal-detail-ov'))
+    document.getElementById('modal-detail-ov').classList.remove('open');
+}
+
+function showToast(msg, type) {
+  const t = document.createElement('div');
+  t.style.cssText = `position:fixed;bottom:24px;left:50%;transform:translateX(-50%);padding:12px 24px;border-radius:8px;font-family:IBM Plex Mono,monospace;font-size:13px;font-weight:500;z-index:900;animation:slideUp .25s ease;box-shadow:0 8px 30px rgba(0,0,0,.2);white-space:nowrap`;
+  t.style.background = type==='gain' ? '#1A7A4A' : '#C0392B';
+  t.style.color = '#fff';
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(()=>t.remove(), 3500);
+}
+
+renderQueue('all');
+</script>
+</div>
 </body>
 </html>
