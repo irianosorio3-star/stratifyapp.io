@@ -1,0 +1,1887 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AlgoVault — El estándar del trading algorítmico verificado</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Outfit:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+--ink:#0D0F14;--ink2:#141820;--ink3:#1A1E2A;--ink4:#222840;
+--slate:#3D4A6B;--slate2:#536091;--mid:#6B7694;--pale:#B8BDD4;
+--ghost:#E8EAF2;--white:#F5F6FA;--sf:#fff;
+--gold:#C9A84C;--gold2:#E8C97A;--g3:rgba(201,168,76,.10);--g4:rgba(201,168,76,.06);
+--gain:#1A7A4A;--gain2:rgba(26,122,74,.10);--gain3:rgba(26,122,74,.06);
+--loss:#C0392B;--loss2:rgba(192,57,43,.08);
+--info:#185FA5;--info2:rgba(24,95,165,.08);
+--warn:#B8860B;--warn2:rgba(184,134,11,.08);
+--bd:rgba(61,74,107,.13);--bd2:rgba(61,74,107,.26);
+--D:'Playfair Display',serif;--B:'Outfit',sans-serif;--M:'IBM Plex Mono',monospace;
+--r:10px;
+}
+html{scroll-behavior:smooth}
+body{background:var(--white);color:var(--ink);font-family:var(--B);font-size:14px;line-height:1.6;min-height:100vh;overflow-x:hidden}
+
+/* ─── NAV ─── */
+.nav{display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:56px;background:var(--ink);border-bottom:1px solid rgba(201,168,76,.12);position:sticky;top:0;z-index:400}
+.logo{display:flex;align-items:center;gap:10px;cursor:pointer;text-decoration:none}
+.lm{width:32px;height:32px;border:1.5px solid var(--gold);display:flex;align-items:center;justify-content:center;border-radius:4px}
+.ln{font-family:var(--D);font-size:17px;font-weight:700;color:#fff;letter-spacing:.4px}
+.nav-links{display:flex}
+.nl{padding:0 13px;height:56px;display:flex;align-items:center;font-size:12px;font-weight:500;color:var(--mid);cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;white-space:nowrap;font-family:var(--M);text-transform:uppercase;letter-spacing:.6px}
+.nl:hover{color:var(--pale)}.nl.active{color:var(--gold2);border-bottom-color:var(--gold)}
+.nav-r{display:flex;align-items:center;gap:8px}
+.btn-ghost{padding:7px 16px;border:.5px solid var(--slate);background:transparent;color:var(--pale);font-family:var(--B);font-size:12px;font-weight:500;border-radius:5px;cursor:pointer;transition:all .15s}
+.btn-ghost:hover{border-color:var(--gold);color:var(--gold)}
+.btn-primary{padding:7px 18px;border:none;background:var(--gold);color:var(--ink);font-family:var(--B);font-size:12px;font-weight:700;border-radius:5px;cursor:pointer;transition:all .15s}
+.btn-primary:hover{background:var(--gold2)}
+
+/* ─── URGENCY BAR ─── */
+.urgency-bar{background:linear-gradient(90deg,var(--gold) 0%,#E8C97A 50%,var(--gold) 100%);background-size:200% 100%;animation:shimmer 3s linear infinite;padding:8px 2rem;text-align:center;font-family:var(--M);font-size:11px;font-weight:500;color:var(--ink);letter-spacing:.3px;cursor:pointer}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.ub-inner{display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap}
+.ub-dot{width:6px;height:6px;background:var(--ink);border-radius:50%;animation:pulse 1.5s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:.4}50%{opacity:1}}
+
+/* ─── VIEWS ─── */
+.view{display:none}.view.active{display:block}
+.page-tabs{display:flex;padding:0 2rem;background:var(--ink2);border-bottom:.5px solid rgba(255,255,255,.05);overflow-x:auto;gap:0}
+.ptab{padding:11px 14px;font-size:10px;font-weight:500;color:var(--mid);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:all .15s;font-family:var(--M);text-transform:uppercase;letter-spacing:.6px}
+.ptab.active{color:var(--gold);border-bottom-color:var(--gold)}.ptab:hover:not(.active){color:var(--pale)}
+
+/* ─────────────────────────────────────────
+   LANDING
+───────────────────────────────────────── */
+/* HERO */
+.hero{background:var(--ink);position:relative;overflow:hidden;padding:0}
+.hero-grid-bg{position:absolute;inset:0;background-image:linear-gradient(rgba(201,168,76,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(201,168,76,.04) 1px,transparent 1px);background-size:40px 40px;pointer-events:none}
+.hero-glow{position:absolute;top:-120px;right:-120px;width:600px;height:600px;background:radial-gradient(circle,rgba(201,168,76,.08) 0%,transparent 70%);pointer-events:none}
+.hero-glow2{position:absolute;bottom:-80px;left:-80px;width:400px;height:400px;background:radial-gradient(circle,rgba(24,95,165,.06) 0%,transparent 70%);pointer-events:none}
+.hero-inner{position:relative;z-index:2;max-width:900px;margin:0 auto;padding:5rem 2rem 4.5rem;text-align:center}
+.hero-kicker{display:inline-flex;align-items:center;gap:8px;padding:5px 14px;border:.5px solid rgba(201,168,76,.3);border-radius:20px;font-family:var(--M);font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:var(--gold);margin-bottom:1.75rem;background:rgba(201,168,76,.05)}
+.hero-kicker span{width:5px;height:5px;background:var(--gold);border-radius:50%;display:inline-block}
+.hero-h1{font-family:var(--D);font-size:clamp(36px,6vw,62px);font-weight:600;color:#fff;line-height:1.08;letter-spacing:-.5px;margin-bottom:1.25rem}
+.hero-h1 em{color:var(--gold2);font-style:italic;position:relative}
+.hero-h1 em::after{content:'';position:absolute;bottom:-4px;left:0;right:0;height:2px;background:var(--gold);opacity:.4}
+.hero-desc{font-size:16px;color:#9ca3b8;line-height:1.75;max-width:620px;margin:0 auto 2.5rem;font-weight:300}
+.hero-desc strong{color:#d1d8f0;font-weight:500}
+.hero-ctas{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;margin-bottom:3rem}
+.cta-main{padding:16px 36px;background:var(--gold);color:var(--ink);font-family:var(--B);font-size:14px;font-weight:700;border-radius:6px;border:none;cursor:pointer;transition:all .2s;letter-spacing:.2px}
+.cta-main:hover{background:var(--gold2);transform:translateY(-2px);box-shadow:0 12px 40px rgba(201,168,76,.25)}
+.cta-sec{padding:16px 36px;background:transparent;color:#fff;font-family:var(--B);font-size:14px;font-weight:500;border-radius:6px;border:1.5px solid rgba(255,255,255,.18);cursor:pointer;transition:all .2s}
+.cta-sec:hover{border-color:var(--gold);color:var(--gold)}
+.hero-proof{display:flex;align-items:center;justify-content:center;gap:6px;font-size:11px;font-family:var(--M);color:var(--mid)}
+.hp-dot{width:4px;height:4px;background:var(--mid);border-radius:50%}
+
+/* TRUST BAR */
+.trust-bar{background:var(--ink2);border-top:.5px solid rgba(255,255,255,.05);border-bottom:.5px solid rgba(255,255,255,.05)}
+.trust-inner{max-width:1100px;margin:0 auto;display:flex;align-items:stretch;overflow:hidden}
+.ti{flex:1;padding:1.25rem 2rem;text-align:center;border-right:.5px solid rgba(255,255,255,.05)}
+.ti:last-child{border-right:none}
+.ti-val{font-size:26px;font-weight:700;font-family:var(--M);color:var(--gold)}
+.ti-lbl{font-size:10px;font-family:var(--M);text-transform:uppercase;letter-spacing:1.2px;color:var(--mid);margin-top:3px}
+
+/* ROLES */
+.roles-section{padding:5rem 2rem;background:var(--white)}
+.section-label{font-family:var(--M);font-size:10px;text-transform:uppercase;letter-spacing:2px;color:var(--gold);text-align:center;margin-bottom:.8rem}
+.section-h2{font-family:var(--D);font-size:clamp(26px,4vw,40px);font-weight:600;text-align:center;color:var(--ink);margin-bottom:.6rem;line-height:1.15}
+.section-sub{font-size:14px;color:var(--mid);text-align:center;max-width:500px;margin:0 auto 3rem;line-height:1.7}
+.roles-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;max-width:960px;margin:0 auto}
+.role-card{border-radius:14px;overflow:hidden;border:.5px solid var(--bd2);transition:all .25s;cursor:pointer;position:relative}
+.role-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;opacity:0;transition:opacity .25s}
+.role-card.buyer::before{background:var(--gold)}
+.role-card.seller::before{background:var(--gain)}
+.role-card:hover{transform:translateY(-4px);box-shadow:0 20px 60px rgba(13,15,20,.12)}
+.role-card.buyer:hover{border-color:rgba(201,168,76,.4)}.role-card.buyer:hover::before{opacity:1}
+.role-card.seller:hover{border-color:rgba(26,122,74,.3)}.role-card.seller:hover::before{opacity:1}
+.rc-body{padding:2rem 2rem 1.5rem;background:#fff}
+.rc-pill{display:inline-flex;align-items:center;gap:6px;padding:3px 10px;border-radius:20px;font-size:10px;font-family:var(--M);text-transform:uppercase;letter-spacing:.8px;margin-bottom:1.1rem}
+.rc-pill.buy{background:var(--g3);color:var(--gold);border:.5px solid rgba(201,168,76,.3)}
+.rc-pill.sell{background:var(--gain2);color:var(--gain);border:.5px solid rgba(26,122,74,.25)}
+.rc-pill span{width:5px;height:5px;border-radius:50%;background:currentColor}
+.rc-h{font-family:var(--D);font-size:26px;font-weight:600;color:var(--ink);margin-bottom:.5rem;line-height:1.15}
+.rc-p{font-size:13px;color:var(--mid);line-height:1.7;margin-bottom:1.25rem}
+.rc-perks{list-style:none;margin-bottom:0}
+.rc-perk{display:flex;align-items:flex-start;gap:9px;font-size:12.5px;color:var(--mid);padding:6px 0;border-bottom:.5px solid var(--ghost)}
+.rc-perk:last-child{border-bottom:none}
+.perk-ck{flex-shrink:0;width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700}
+.perk-ck.buy{background:var(--g3);color:var(--gold)}.perk-ck.sell{background:var(--gain2);color:var(--gain)}
+.rc-foot{padding:1.5rem 2rem;background:var(--white);border-top:.5px solid var(--ghost)}
+.price-line{display:flex;align-items:baseline;gap:6px;margin-bottom:.9rem}
+.price-big{font-size:32px;font-weight:700;font-family:var(--M);color:var(--ink)}
+.price-per{font-size:12px;color:var(--mid)}
+.rc-btn{width:100%;padding:14px;border-radius:7px;font-family:var(--B);font-size:14px;font-weight:600;cursor:pointer;border:none;transition:all .18s;letter-spacing:.2px}
+.rc-btn.buy{background:var(--gold);color:var(--ink)}.rc-btn.buy:hover{background:var(--gold2)}
+.rc-btn.sell{background:var(--ink);color:#fff}.rc-btn.sell:hover{background:var(--ink3)}
+
+/* FREE ACCESS BANNER */
+.free-banner{background:var(--ink);padding:1rem 2rem;display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;border-top:.5px solid rgba(201,168,76,.1);border-bottom:.5px solid rgba(201,168,76,.1)}
+.fb-badge{padding:4px 10px;background:var(--gain2);border:.5px solid rgba(26,122,74,.3);border-radius:4px;font-size:10px;font-family:var(--M);text-transform:uppercase;letter-spacing:1px;color:var(--gain);font-weight:600}
+.fb-text{font-size:13px;color:var(--pale)}.fb-cta{font-size:13px;font-weight:600;color:var(--gold);cursor:pointer;text-decoration:underline}
+
+/* HOW IT WORKS */
+.hiw{padding:5rem 2rem;background:var(--ink);position:relative;overflow:hidden}
+.hiw::before{content:'';position:absolute;inset:0;background-image:radial-gradient(rgba(201,168,76,.03) 1px,transparent 1px);background-size:24px 24px}
+.hiw-inner{position:relative;z-index:1;max-width:1100px;margin:0 auto}
+.hiw-tabs{display:flex;gap:0;background:var(--ink2);border-radius:6px;padding:4px;width:fit-content;margin:0 auto 2.5rem}
+.hiw-tab{padding:9px 28px;border-radius:4px;font-size:12px;font-family:var(--M);text-transform:uppercase;letter-spacing:.7px;color:var(--mid);cursor:pointer;transition:all .15s}
+.hiw-tab.active{background:var(--gold);color:var(--ink);font-weight:600}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:rgba(255,255,255,.04);border-radius:10px;overflow:hidden;margin-top:1.5rem}
+.step{padding:1.75rem 1.5rem;background:var(--ink2)}
+.step-n{font-size:10px;font-family:var(--M);text-transform:uppercase;letter-spacing:1.5px;color:var(--gold);margin-bottom:.65rem}
+.step-icon{font-size:22px;margin-bottom:.75rem}
+.step-h{font-size:15px;font-weight:600;color:#fff;margin-bottom:.5rem;line-height:1.3}
+.step-p{font-size:12px;color:var(--mid);line-height:1.7}
+
+/* TESTIMONIALS */
+.testi{padding:4.5rem 2rem;background:var(--white)}
+.testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;max-width:1100px;margin:2rem auto 0}
+.tcard{background:#fff;border:.5px solid var(--bd);border-radius:12px;padding:1.5rem;transition:all .2s}
+.tcard:hover{border-color:rgba(201,168,76,.3);transform:translateY(-2px)}
+.tcard-stars{display:flex;gap:3px;margin-bottom:.75rem}
+.tstar{color:var(--gold);font-size:13px}
+.tcard-q{font-size:13px;color:var(--ink);line-height:1.7;margin-bottom:1rem;font-style:italic;font-family:var(--D)}
+.tcard-author{display:flex;align-items:center;gap:8px}
+.tcard-av{width:32px;height:32px;border-radius:50%;background:var(--ink);display:flex;align-items:center;justify-content:center;font-family:var(--M);font-size:11px;font-weight:600;color:var(--gold);flex-shrink:0}
+.tcard-name{font-size:12px;font-weight:600;color:var(--ink)}.tcard-role{font-size:11px;color:var(--mid);font-family:var(--M)}
+
+/* PRICING */
+.pricing{padding:5rem 2rem;background:var(--ink)}
+.pricing-inner{max-width:1100px;margin:0 auto}
+.plans{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;margin-top:2.5rem}
+.plan{border-radius:14px;overflow:hidden;border:.5px solid rgba(255,255,255,.08);position:relative}
+.plan.featured{border-color:var(--gold);box-shadow:0 0 40px rgba(201,168,76,.12)}
+.plan-badge{position:absolute;top:-1px;left:50%;transform:translateX(-50%);background:var(--gold);color:var(--ink);font-family:var(--M);font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;padding:3px 14px;border-radius:0 0 8px 8px}
+.plan-h{padding:2rem 2rem 1.5rem;background:var(--ink2)}
+.plan-name{font-size:11px;font-family:var(--M);text-transform:uppercase;letter-spacing:1.5px;color:var(--mid);margin-bottom:.5rem}
+.plan-price{font-size:38px;font-weight:700;font-family:var(--M);color:#fff;line-height:1}
+.plan-price span{font-size:14px;font-weight:400;color:var(--mid)}
+.plan-desc{font-size:12px;color:var(--mid);margin-top:.5rem;line-height:1.5}
+.plan-body{padding:1.5rem 2rem;background:var(--ink3)}
+.plan-feats{list-style:none}
+.pf{display:flex;align-items:flex-start;gap:8px;font-size:12px;padding:5px 0;border-bottom:.5px solid rgba(255,255,255,.04)}
+.pf:last-child{border-bottom:none}
+.pf-ck{font-size:10px;flex-shrink:0;margin-top:2px}
+.pf-ck.ok{color:var(--gold)}.pf-ck.no{color:rgba(255,255,255,.2)}
+.pf-txt{color:rgba(255,255,255,.6)}.pf-txt.ok{color:rgba(255,255,255,.85)}
+.plan-foot{padding:1.25rem 2rem;background:var(--ink3);border-top:.5px solid rgba(255,255,255,.04)}
+.plan-btn{width:100%;padding:13px;border-radius:6px;font-family:var(--B);font-size:13px;font-weight:600;cursor:pointer;border:none;transition:all .15s}
+.plan-btn.free{background:rgba(255,255,255,.07);color:rgba(255,255,255,.7);border:.5px solid rgba(255,255,255,.1)}.plan-btn.free:hover{background:rgba(255,255,255,.12)}
+.plan-btn.pro{background:var(--gold);color:var(--ink)}.plan-btn.pro:hover{background:var(--gold2)}
+.plan-btn.creator{background:rgba(26,122,74,.2);color:var(--gain);border:.5px solid rgba(26,122,74,.3)}.plan-btn.creator:hover{background:rgba(26,122,74,.3)}
+
+/* FINAL CTA */
+.final-cta{padding:5rem 2rem;background:linear-gradient(135deg,var(--ink) 0%,var(--ink3) 50%,var(--ink) 100%);text-align:center;position:relative;overflow:hidden}
+.fc-glow{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:500px;height:500px;background:radial-gradient(circle,rgba(201,168,76,.06) 0%,transparent 70%);pointer-events:none}
+.fc-inner{position:relative;z-index:1}
+.fc-h{font-family:var(--D);font-size:clamp(28px,5vw,48px);font-weight:600;color:#fff;margin-bottom:1rem;line-height:1.1}
+.fc-p{font-size:15px;color:var(--mid);margin-bottom:2.5rem;line-height:1.7;max-width:520px;margin-left:auto;margin-right:auto}
+.fc-btns{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap}
+
+/* ─────────────────────────────────────────
+   MARKETPLACE
+───────────────────────────────────────── */
+.mkt-hdr{background:var(--ink);padding:1.25rem 2rem;border-bottom:.5px solid rgba(255,255,255,.05)}
+.mkt-hd-inner{display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:12px;max-width:1400px;margin:0 auto}
+.mkt-title{font-family:var(--D);font-size:26px;color:#fff;line-height:1.1}
+.mkt-title em{color:var(--gold2);font-style:italic}
+.mkt-sub{font-size:11px;color:var(--mid);font-family:var(--M);margin-top:3px}
+.mkt-sort{display:flex;gap:6px;flex-wrap:wrap}
+.sort-btn{padding:5px 12px;border:.5px solid var(--slate);background:transparent;color:var(--mid);font-family:var(--M);font-size:10px;text-transform:uppercase;letter-spacing:.5px;border-radius:4px;cursor:pointer;transition:all .15s}
+.sort-btn:hover,.sort-btn.active{border-color:var(--gold);color:var(--gold)}
+
+.mkt-body{max-width:1400px;margin:0 auto;padding:1.5rem 2rem}
+.filter-tabs{display:flex;gap:4px;margin-bottom:1.25rem;flex-wrap:wrap}
+.ftab{padding:5px 13px;border:.5px solid var(--bd2);background:#fff;border-radius:20px;font-size:11px;font-family:var(--M);color:var(--mid);cursor:pointer;transition:all .15s;text-transform:uppercase;letter-spacing:.4px}
+.ftab.active,.ftab:hover{border-color:var(--gold);color:var(--gold);background:var(--g3)}
+
+/* STATS ROW */
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:1.5rem}
+.stat-c{background:#fff;border:.5px solid var(--bd);border-radius:10px;padding:14px 18px}
+.stat-l{font-size:10px;font-family:var(--M);text-transform:uppercase;letter-spacing:.8px;color:var(--mid);margin-bottom:5px}
+.stat-v{font-size:22px;font-weight:700;font-family:var(--M);color:var(--ink)}
+.stat-s{font-size:11px;color:var(--mid);margin-top:2px;font-family:var(--M)}
+.stat-v.g{color:var(--gain)}.stat-v.o{color:var(--gold)}
+
+/* FREE BANNER IN MARKETPLACE */
+.free-strip{background:var(--g3);border:.5px solid rgba(201,168,76,.2);border-radius:8px;padding:10px 16px;display:flex;align-items:center;gap:12px;margin-bottom:1.25rem;flex-wrap:wrap}
+.fs-badge{padding:3px 9px;background:var(--gain2);border:.5px solid rgba(26,122,74,.25);border-radius:4px;font-size:10px;font-family:var(--M);text-transform:uppercase;color:var(--gain);font-weight:600;flex-shrink:0}
+.fs-txt{font-size:12px;color:var(--mid);flex:1}.fs-link{font-size:12px;font-weight:600;color:var(--gold);cursor:pointer;text-decoration:underline;white-space:nowrap}
+
+/* CARDS */
+.card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(295px,1fr));gap:12px}
+.card{background:#fff;border:.5px solid var(--bd);border-radius:12px;padding:1.1rem;cursor:pointer;transition:all .22s;position:relative;overflow:hidden}
+.card:hover{border-color:var(--gold);transform:translateY(-3px);box-shadow:0 12px 40px rgba(13,15,20,.1)}
+.card-badge{position:absolute;top:12px;right:12px;padding:3px 8px;border-radius:3px;font-size:10px;font-weight:600;font-family:var(--M);text-transform:uppercase;letter-spacing:.5px}
+.badge-v{background:var(--gain2);color:var(--gain);border:.5px solid rgba(26,122,74,.25)}
+.badge-h{background:var(--g3);color:var(--gold);border:.5px solid rgba(201,168,76,.3)}
+.badge-n{background:var(--info2);color:var(--info);border:.5px solid rgba(24,95,165,.25)}
+.badge-p{background:rgba(61,74,107,.12);color:var(--slate2);border:.5px solid rgba(61,74,107,.25)}
+.card-top{display:flex;align-items:flex-start;gap:10px;margin-bottom:.8rem;padding-right:60px}
+.card-ico{width:38px;height:38px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:var(--M);font-size:11px;font-weight:600;flex-shrink:0;border:.5px solid var(--bd)}
+.ico-nq{background:var(--info2);color:var(--info)}.ico-fx{background:var(--gain2);color:var(--gain)}.ico-au{background:var(--g3);color:var(--gold)}.ico-sp{background:rgba(83,96,145,.1);color:var(--slate2)}.ico-bt{background:var(--loss2);color:var(--loss)}
+.card-name{font-size:13.5px;font-weight:600;color:var(--ink);line-height:1.3}.card-auth{font-size:11px;color:var(--mid);margin-top:2px;font-family:var(--M)}
+.card-stars{display:flex;gap:2px;margin-top:5px}
+.star{font-size:10px;color:var(--gold)}.star.off{color:var(--ghost)}
+.mini-chart{height:34px;position:relative;margin-bottom:.75rem}
+.card-metrics{display:grid;grid-template-columns:repeat(4,1fr);border-top:.5px solid var(--bd);border-bottom:.5px solid var(--bd);padding:7px 0;margin-bottom:.75rem}
+.cm{text-align:center;border-right:.5px solid var(--bd)}.cm:last-child{border-right:none}
+.cml{font-size:9px;font-family:var(--M);text-transform:uppercase;letter-spacing:.5px;color:var(--mid)}.cmv{font-size:13px;font-weight:500;font-family:var(--M);margin-top:2px}
+.card-foot{display:flex;align-items:center;justify-content:space-between}
+.card-price{font-size:17px;font-weight:700;font-family:var(--M);color:var(--ink)}.card-price span{font-size:11px;color:var(--mid);font-weight:400}
+.card-tags{display:flex;gap:4px;flex-wrap:wrap}
+.ctag{padding:2px 7px;border-radius:3px;font-size:9px;font-family:var(--M);background:var(--white);color:var(--mid);border:.5px solid var(--bd)}
+.score-chip{display:inline-flex;align-items:center;padding:2px 7px;border-radius:3px;font-size:10px;font-family:var(--M);background:var(--info2);color:var(--info);border:.5px solid rgba(24,95,165,.2)}
+
+/* LOCKED CARD OVERLAY */
+.locked-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(245,246,250,0) 0%,rgba(245,246,250,.7) 40%,rgba(245,246,250,.97) 70%,rgba(245,246,250,1) 100%);display:flex;align-items:flex-end;justify-content:center;padding-bottom:14px;z-index:2}
+.lock-content{text-align:center}
+.lock-icon{font-size:20px;margin-bottom:4px}
+.lock-msg{font-size:11px;color:var(--mid);font-family:var(--M);margin-bottom:8px}
+.lock-btn{padding:7px 18px;background:var(--gold);color:var(--ink);border:none;border-radius:5px;font-family:var(--B);font-size:12px;font-weight:600;cursor:pointer}
+
+/* ─────────────────────────────────────────
+   DETAIL
+───────────────────────────────────────── */
+.detail-wrap{max-width:1400px;margin:0 auto;padding:1.5rem 2rem}
+.back-btn{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-family:var(--M);color:var(--mid);cursor:pointer;margin-bottom:1.25rem;padding:6px 13px;border:.5px solid var(--bd);border-radius:4px;background:#fff;transition:all .15s}
+.back-btn:hover{color:var(--ink);border-color:var(--bd2)}
+.detail-layout{display:grid;grid-template-columns:1fr 340px;gap:1.5rem;align-items:start}
+.detail-head{display:flex;align-items:flex-start;gap:14px;margin-bottom:1.25rem}
+.d-ico{width:52px;height:52px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-family:var(--M);font-size:13px;font-weight:600;flex-shrink:0;border:.5px solid var(--bd)}
+.d-title{font-family:var(--D);font-size:24px;font-weight:600;color:var(--ink);line-height:1.2}
+.d-auth{font-size:12px;color:var(--mid);font-family:var(--M);margin-top:3px}
+.d-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:7px}
+.dtag{padding:3px 9px;border-radius:3px;font-size:11px;font-family:var(--M);background:var(--white);color:var(--mid);border:.5px solid var(--bd)}
+.sec-label{font-size:10px;font-family:var(--M);text-transform:uppercase;letter-spacing:1.5px;color:var(--gold);margin-bottom:8px;margin-top:1.4rem}
+.sec-label:first-child{margin-top:0}
+.metrics-6{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:1rem}
+.metric-box{background:#fff;border:.5px solid var(--bd);border-radius:8px;padding:12px 14px}
+.mb-l{font-size:10px;font-family:var(--M);text-transform:uppercase;letter-spacing:.5px;color:var(--mid)}.mb-v{font-size:20px;font-weight:600;font-family:var(--M);margin-top:3px}.mb-s{font-size:10px;color:var(--mid);margin-top:2px;font-family:var(--M)}
+.chart-box{background:#fff;border:.5px solid var(--bd);border-radius:10px;padding:14px;margin-bottom:1rem}
+.cb-label{font-size:10px;font-family:var(--M);text-transform:uppercase;letter-spacing:1px;color:var(--mid);margin-bottom:10px}
+
+/* BLURRED SECTIONS */
+.blur-section{position:relative;border-radius:10px;overflow:hidden}
+.blur-content{filter:blur(5px);pointer-events:none;user-select:none;border-radius:10px}
+.blur-gate{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(245,246,250,.6);backdrop-filter:blur(1px);border:.5px dashed rgba(201,168,76,.4);border-radius:10px}
+.bg-icon{font-size:28px;margin-bottom:8px}
+.bg-title{font-family:var(--D);font-size:16px;font-weight:600;color:var(--ink);margin-bottom:4px}
+.bg-desc{font-size:12px;color:var(--mid);text-align:center;max-width:280px;line-height:1.5;margin-bottom:12px}
+.bg-btn{padding:9px 22px;background:var(--gold);color:var(--ink);border:none;border-radius:5px;font-family:var(--B);font-size:13px;font-weight:600;cursor:pointer;transition:all .15s}
+.bg-btn:hover{background:var(--gold2)}
+
+/* CERT LEVELS */
+.cert-levels{background:#fff;border:.5px solid var(--bd);border-radius:10px;overflow:hidden;margin-bottom:1rem}
+.cl-row{display:flex;align-items:center;gap:12px;padding:10px 14px;border-bottom:.5px solid var(--bd)}
+.cl-row:last-child{border-bottom:none}
+.cl-row.done{background:rgba(26,122,74,.03);border-left:2px solid var(--gain)}.cl-row.cur{background:rgba(201,168,76,.04);border-left:2px solid var(--gold)}
+.cl-stars{display:flex;gap:1px;width:65px;flex-shrink:0}
+.cl-info{flex:1}.cl-name{font-size:12px;font-weight:600;color:var(--ink)}.cl-req{font-size:10px;color:var(--mid);font-family:var(--M)}
+.cl-status{font-size:10px;font-family:var(--M);padding:2px 8px;border-radius:3px}
+.cls-done{background:var(--gain2);color:var(--gain)}.cls-cur{background:var(--g3);color:var(--gold)}.cls-pend{color:var(--mid)}
+
+/* PURCHASE CARD */
+.purchase-card{background:#fff;border:.5px solid var(--bd2);border-radius:14px;overflow:hidden;position:sticky;top:68px}
+.pc-head{padding:1.25rem 1.5rem;background:var(--ink)}.pc-price{font-size:32px;font-weight:700;font-family:var(--M);color:#fff}.pc-price span{font-size:13px;font-weight:400;color:var(--mid)}.pc-note{font-size:11px;color:var(--mid);font-family:var(--M);margin-top:3px}
+.pc-body{padding:1.25rem 1.5rem}
+.pc-btn-main{width:100%;padding:13px;border:none;background:var(--gold);color:var(--ink);font-family:var(--B);font-size:14px;font-weight:700;border-radius:6px;cursor:pointer;margin-bottom:7px;transition:all .15s}.pc-btn-main:hover{background:var(--gold2)}
+.pc-btn-trial{width:100%;padding:11px;border:.5px solid var(--bd2);background:transparent;color:var(--ink);font-family:var(--B);font-size:13px;font-weight:500;border-radius:6px;cursor:pointer;margin-bottom:7px;transition:all .15s}.pc-btn-trial:hover{background:var(--white)}
+.pc-btn-add{width:100%;padding:10px;border:.5px solid var(--slate);background:transparent;color:var(--slate2);font-family:var(--B);font-size:12px;border-radius:6px;cursor:pointer;margin-bottom:14px;transition:all .15s}.pc-btn-add:hover{border-color:var(--gold);color:var(--gold)}
+.incl-list{list-style:none}
+.incl-item{display:flex;align-items:flex-start;gap:7px;font-size:11px;color:var(--mid);padding:5px 0;border-bottom:.5px solid var(--bd);font-family:var(--M)}
+.incl-item:last-child{border-bottom:none}.incl-ok{color:var(--gain);flex-shrink:0}
+.scarcity-note{margin-top:12px;padding:8px 10px;background:var(--warn2);border:.5px solid rgba(184,134,11,.2);border-radius:6px;font-size:11px;color:var(--warn);text-align:center;font-family:var(--M)}
+.seller-card{margin-top:12px;padding:12px;background:var(--white);border:.5px solid var(--bd);border-radius:8px}
+.seller-top{display:flex;align-items:center;gap:9px;margin-bottom:9px}
+.seller-av{width:34px;height:34px;border-radius:50%;background:var(--ink);display:flex;align-items:center;justify-content:center;font-family:var(--M);font-size:11px;font-weight:600;color:var(--gold);flex-shrink:0}
+.seller-name{font-size:12px;font-weight:600;color:var(--ink)}.seller-role{font-size:10px;color:var(--mid);font-family:var(--M)}
+.seller-stats{display:flex;gap:16px}
+.ss-v{font-size:14px;font-weight:600;font-family:var(--M);color:var(--ink)}.ss-l{font-size:9px;font-family:var(--M);text-transform:uppercase;color:var(--mid)}
+
+/* ─────────────────────────────────────────
+   ANALYTICS (CREATOR ONLY)
+───────────────────────────────────────── */
+.analytics-wrap{max-width:1400px;margin:0 auto;padding:1.5rem 2rem}
+.analytics-hdr{background:var(--ink);border-radius:12px;padding:1.5rem 1.75rem;margin-bottom:1.25rem;border:.5px solid rgba(201,168,76,.15);position:relative;overflow:hidden}
+.ah-deco{position:absolute;top:-40px;right:-40px;width:200px;height:200px;background:radial-gradient(circle,rgba(201,168,76,.06) 0%,transparent 70%)}
+.ah-label{font-size:10px;font-family:var(--M);text-transform:uppercase;letter-spacing:2px;color:var(--gold);margin-bottom:5px}
+.ah-h{font-family:var(--D);font-size:26px;color:#fff;position:relative;z-index:1}
+.ah-s{font-size:11px;color:var(--mid);font-family:var(--M);margin-top:3px;position:relative;z-index:1}
+.an-layout{display:grid;grid-template-columns:1fr 290px;gap:1.25rem;align-items:start}
+.metric-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:1.25rem}
+.am{background:#fff;border:.5px solid var(--bd);border-radius:10px;padding:14px 16px}
+.am-l{font-size:10px;font-family:var(--M);text-transform:uppercase;letter-spacing:.8px;color:var(--mid);margin-bottom:5px}
+.am-v{font-size:22px;font-weight:700;font-family:var(--M);color:var(--ink)}.am-s{font-size:11px;color:var(--mid);margin-top:2px;font-family:var(--M)}
+.strat-table{width:100%;border-collapse:collapse}
+.strat-table th{font-size:10px;font-family:var(--M);text-transform:uppercase;letter-spacing:.8px;color:var(--mid);padding:9px 12px;border-bottom:.5px solid var(--bd);text-align:left;font-weight:500;background:var(--white)}
+.strat-table td{font-size:12px;padding:10px 12px;border-bottom:.5px solid var(--bd);font-family:var(--M);color:var(--ink)}
+.strat-table tr:last-child td{border-bottom:none}.strat-table tr:hover td{background:var(--g4)}
+.balance-card{background:#fff;border:.5px solid var(--bd2);border-radius:14px;overflow:hidden;position:sticky;top:68px}
+.bc-head{padding:14px 18px;background:var(--ink)}
+.bc-t{font-size:10px;font-family:var(--M);text-transform:uppercase;letter-spacing:1.5px;color:var(--gold);margin-bottom:4px}
+.bc-val{font-size:38px;font-weight:700;font-family:var(--M);color:#fff}
+.bc-sub{font-size:11px;color:var(--mid);font-family:var(--M);margin-top:2px}
+.bc-body{padding:14px 18px}
+.bc-row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:.5px solid var(--bd)}
+.bc-row:last-child{border-bottom:none}.bc-l{font-size:11px;color:var(--mid)}.bc-v{font-size:12px;font-weight:600;font-family:var(--M);color:var(--ink)}
+.withdraw-btn{width:100%;padding:12px;border:none;background:var(--gold);color:var(--ink);font-family:var(--B);font-size:13px;font-weight:700;border-radius:6px;cursor:pointer;margin-top:14px;transition:all .15s}.withdraw-btn:hover{background:var(--gold2)}
+.ph-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:.5px solid var(--bd);font-size:11px;font-family:var(--M)}.ph-row:last-child{border-bottom:none}
+.proj-box{margin-top:14px;padding:12px;background:var(--white);border:.5px solid var(--bd);border-radius:8px}
+.pj-l{font-size:10px;font-family:var(--M);text-transform:uppercase;letter-spacing:.8px;color:var(--mid);margin-bottom:5px}
+.pj-v{font-size:24px;font-weight:700;font-family:var(--M);color:var(--gold)}
+.pj-s{font-size:10px;color:var(--mid);font-family:var(--M);margin-top:2px}
+
+/* ─────────────────────────────────────────
+   MODAL
+───────────────────────────────────────── */
+.modal-ov{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(13,15,20,.88);z-index:600;display:none;align-items:center;justify-content:center;padding:1rem}
+.modal-ov.open{display:flex}
+.modal-box{background:#fff;border-radius:16px;width:100%;max-width:520px;overflow:hidden;border:.5px solid var(--bd2);position:relative;animation:slideUp .25s ease}
+@keyframes slideUp{from{transform:translateY(16px);opacity:0}to{transform:translateY(0);opacity:1}}
+.modal-hd{padding:2rem 2rem 1.5rem;background:var(--ink);border-bottom:.5px solid rgba(201,168,76,.12)}
+.modal-title{font-family:var(--D);font-size:26px;color:#fff;margin-bottom:3px}
+.modal-sub{font-size:12px;color:var(--mid);font-family:var(--M)}
+.modal-close{position:absolute;top:14px;right:14px;width:30px;height:30px;border-radius:50%;background:var(--ink3);border:.5px solid var(--bd2);color:var(--mid);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px;transition:all .15s}.modal-close:hover{color:#fff;background:var(--slate)}
+.modal-bd{padding:1.75rem 2rem}
+.role-pills{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:1.5rem}
+.rpill{padding:14px;border:.5px solid var(--bd2);border-radius:10px;cursor:pointer;transition:all .18s;text-align:center;position:relative;overflow:hidden}
+.rpill:hover{border-color:var(--gold)}
+.rpill.selected-buy{border-color:var(--gold);background:var(--g3)}.rpill.selected-sell{border-color:var(--gain);background:var(--gain2)}
+.rpill-ico{font-size:24px;margin-bottom:6px}
+.rpill-t{font-size:13px;font-weight:700;color:var(--ink);margin-bottom:2px}
+.rpill-d{font-size:11px;color:var(--mid);font-family:var(--M);line-height:1.4}
+.rpill-benefit{margin-top:8px;padding:4px 8px;border-radius:4px;font-size:10px;font-family:var(--M)}
+.rpb-buy{background:var(--g3);color:var(--gold)}.rpb-sell{background:var(--gain2);color:var(--gain)}
+.f-grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.flbl{font-size:10px;font-family:var(--M);text-transform:uppercase;letter-spacing:1px;color:var(--mid);margin-bottom:5px;display:block}
+.finput{width:100%;padding:10px 12px;background:var(--white);border:.5px solid var(--bd2);border-radius:5px;color:var(--ink);font-family:var(--M);font-size:13px;outline:none;margin-bottom:10px;transition:border-color .15s}
+.finput:focus{border-color:var(--gold)}
+.reg-btn{width:100%;padding:14px;border:none;background:var(--gold);color:var(--ink);font-family:var(--B);font-size:14px;font-weight:700;border-radius:6px;cursor:pointer;margin-top:4px;transition:all .15s}
+.reg-btn:hover{background:var(--gold2)}
+.reg-btn.sell-mode{background:var(--gain);color:#fff}.reg-btn.sell-mode:hover{background:#1f9057}
+.modal-fine{font-size:10px;color:var(--mid);text-align:center;margin-top:8px;font-family:var(--M)}
+
+/* MISC */
+.gain{color:var(--gain)}.loss{color:var(--loss)}.gold{color:var(--gold)}
+</style>
+</head>
+<body>
+
+<!-- URGENCY BAR -->
+<div class="urgency-bar" onclick="openModal('buyer')">
+  <div class="ub-inner">
+    <div class="ub-dot"></div>
+    <span>🔥 23 nuevas estrategias verificadas esta semana · 8 licencias institucionales disponibles · La lista de espera Pro cierra el viernes</span>
+    <div class="ub-dot"></div>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav class="nav">
+  <a class="logo" href="#" onclick="gv('landing');return false">
+    <div class="lm"><svg viewBox="0 0 18 18" fill="none" width="16" height="16"><polyline points="2,13 9,3 16,13" stroke="#C9A84C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><polyline points="5,13 9,8 13,13" stroke="#C9A84C" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    <div class="ln">ALGOVAULT</div>
+  </a>
+  <div class="nav-links">
+    <div class="nl" id="nl-marketplace" onclick="gv('marketplace')">Marketplace</div>
+    <div class="nl" id="nl-verify" onclick="gv('verify')">Certificar</div>
+    <div class="nl" id="nl-portfolio" onclick="gv('portfolio')">Portfolio</div>
+    <div class="nl" id="nl-analytics" onclick="gv('analytics')">Mi Revenue</div>
+  </div>
+  <div class="nav-r">
+    <button class="btn-ghost" onclick="openModal('buyer')">Iniciar sesión</button>
+    <button class="btn-primary" onclick="openModal('buyer')">Explorar gratis →</button>
+  </div>
+</nav>
+
+<!-- PAGE SUB-TABS -->
+<div class="page-tabs" id="page-tabs">
+  <div class="ptab" onclick="fm('all',this)">Todas</div>
+  <div class="ptab" onclick="fm('forex',this)">Forex</div>
+  <div class="ptab" onclick="fm('indices',this)">Índices</div>
+  <div class="ptab" onclick="fm('crypto',this)">Crypto</div>
+  <div class="ptab" onclick="fm('commodities',this)">Commodities</div>
+  <div class="ptab" onclick="fm('mt5',this)">MT5</div>
+  <div class="ptab" onclick="fm('python',this)">Python</div>
+</div>
+
+<!-- ════════════════════════════════════════
+     LANDING
+════════════════════════════════════════ -->
+<div id="view-landing" class="view active">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-grid-bg"></div>
+    <div class="hero-glow"></div>
+    <div class="hero-glow2"></div>
+    <div class="hero-inner">
+      <div class="hero-kicker"><span></span>El estándar institucional del trading algorítmico<span></span></div>
+      <h1 class="hero-h1">
+        Los traders que ganan<br>no improvisan.<br><em>Operan con datos reales.</em>
+      </h1>
+      <p class="hero-desc">
+        El 90% de los traders pierde dinero con estrategias sin respaldo real.<br>
+        <strong>AlgoVault es el único marketplace donde cada estrategia pasa por validación cuantitativa verificada antes de publicarse.</strong><br>
+        Sin equity curves inventadas. Sin backtests manipulados. Solo evidencia.
+      </p>
+      <div class="hero-ctas">
+        <button class="cta-main" onclick="gv('marketplace')">Explorar estrategias gratis</button>
+        <button class="cta-sec" onclick="openModal('seller')">Vender mis estrategias →</button>
+      </div>
+      <div class="hero-proof">
+        <span>Acceso al catálogo 100% gratis</span>
+        <div class="hp-dot"></div>
+        <span>Sin tarjeta de crédito</span>
+        <div class="hp-dot"></div>
+        <span>14 días de prueba en cada estrategia</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- TRUST BAR -->
+  <div class="trust-bar">
+    <div class="trust-inner">
+      <div class="ti"><div class="ti-val">1,847</div><div class="ti-lbl">Estrategias activas</div></div>
+      <div class="ti"><div class="ti-val">$2.3M</div><div class="ti-lbl">Volumen mensual</div></div>
+      <div class="ti"><div class="ti-val">12,400+</div><div class="ti-lbl">Traders en 94 países</div></div>
+      <div class="ti"><div class="ti-val">68%</div><div class="ti-lbl">Con track record real</div></div>
+      <div class="ti"><div class="ti-val">$142K</div><div class="ti-lbl">Pagado a creadores</div></div>
+    </div>
+  </div>
+
+  <!-- FREE ACCESS CALLOUT -->
+  <div class="free-banner">
+    <div class="fb-badge">GRATIS</div>
+    <div class="fb-text">El catálogo completo es visible sin registro. Las métricas clave, el score y la certificación de cada estrategia son públicas.</div>
+    <div class="fb-cta" onclick="gv('marketplace')">Explorar ahora →</div>
+  </div>
+
+  <!-- ROLES -->
+  <section class="roles-section">
+    <div class="section-label">Elige tu camino</div>
+    <h2 class="section-h2">¿Qué tipo de trader eres?</h2>
+    <p class="section-sub">Dos ecosistemas. Una sola plataforma. Únete como comprador o como creador — o como los dos.</p>
+    <div class="roles-grid">
+
+      <div class="role-card buyer" onclick="openModal('buyer')">
+        <div class="rc-body">
+          <div class="rc-pill buy"><span></span>Para compradores</div>
+          <div class="rc-h">Accede al edge que ya fue probado.</div>
+          <div class="rc-p">Para de perder tiempo en estrategias sin respaldo. En AlgoVault solo encontrarás sistemas que pasaron validación cuantitativa real — backtest, robustez, y cuenta real verificada con terceros.</div>
+          <ul class="rc-perks">
+            <li class="rc-perk"><div class="perk-ck buy">✓</div>Catálogo de 1,847+ estrategias certificadas — gratis</li>
+            <li class="rc-perk"><div class="perk-ck buy">✓</div>Score AlgoVault transparente y trazable en cada estrategia</li>
+            <li class="rc-perk"><div class="perk-ck buy">✓</div>Portfolio Builder con correlación y análisis de riesgo</li>
+            <li class="rc-perk"><div class="perk-ck buy">✓</div>Equity curve real + retornos mensuales verificados</li>
+            <li class="rc-perk"><div class="perk-ck buy">✓</div>14 días de prueba gratuita por estrategia</li>
+          </ul>
+        </div>
+        <div class="rc-foot">
+          <div class="price-line">
+            <span class="price-big">$49</span>
+            <span class="price-per">/mes · Plan Pro · Cancela cuando quieras</span>
+          </div>
+          <button class="rc-btn buy">Empezar a explorar estrategias →</button>
+        </div>
+      </div>
+
+      <div class="role-card seller" onclick="openModal('seller')">
+        <div class="rc-body">
+          <div class="rc-pill sell"><span></span>Para creadores</div>
+          <div class="rc-h">Convierte tu algoritmo en ingresos recurrentes.</div>
+          <div class="rc-p">Si tienes una estrategia con resultados reales, AlgoVault es el único lugar donde el mercado la valora correctamente. La certificación justifica el precio. 12,400+ traders activos esperan lo que tú ya construiste.</div>
+          <ul class="rc-perks">
+            <li class="rc-perk"><div class="perk-ck sell">✓</div>70–80% de comisión directa — sin intermediarios</li>
+            <li class="rc-perk"><div class="perk-ck sell">✓</div>Dashboard de revenue en tiempo real + analytics</li>
+            <li class="rc-perk"><div class="perk-ck sell">✓</div>Sistema de certificación 5 niveles que justifica tu precio</li>
+            <li class="rc-perk"><div class="perk-ck sell">✓</div>Distribución ante 12,400+ traders activos globales</li>
+            <li class="rc-perk"><div class="perk-ck sell">✓</div>Retiro mensual — directo a tu cuenta bancaria o cripto</li>
+          </ul>
+        </div>
+        <div class="rc-foot">
+          <div class="price-line">
+            <span class="price-big">$29</span>
+            <span class="price-per">/mes · Plan Creator · Sin comisión oculta</span>
+          </div>
+          <button class="rc-btn sell">Empezar a vender mis estrategias →</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="hiw">
+    <div class="hiw-inner">
+      <div class="section-label" style="text-align:center;color:var(--gold)">Cómo funciona</div>
+      <h2 class="section-h2" style="color:#fff;text-align:center;margin-bottom:.6rem">Proceso simple. Validación rigurosa.</h2>
+      <p class="section-sub" style="margin-bottom:2rem">Sin complejidad técnica. En menos de 5 minutos ya estás operando en el ecosistema.</p>
+      <div class="hiw-tabs">
+        <div class="hiw-tab active" id="how-buy" onclick="switchHow('buy')">Para compradores</div>
+        <div class="hiw-tab" id="how-sell" onclick="switchHow('sell')">Para creadores</div>
+      </div>
+      <div class="steps" id="hiw-steps">
+        <div class="step"><div class="step-n">Paso 01</div><div class="step-icon">🔍</div><div class="step-h">Explora sin registro</div><div class="step-p">Catálogo completo visible gratis. Filtra por mercado, Sharpe, drawdown, nivel de certificación y plataforma.</div></div>
+        <div class="step"><div class="step-n">Paso 02</div><div class="step-icon">📊</div><div class="step-h">Analiza con datos reales</div><div class="step-p">Equity curve verificada, retornos mensuales, track record en cuenta real con Myfxbook o Darwinex.</div></div>
+        <div class="step"><div class="step-n">Paso 03</div><div class="step-icon">⚡</div><div class="step-h">Prueba gratis 14 días</div><div class="step-p">Antes de comprar, prueba en demo o cuenta real durante 14 días. Cero riesgo, decisión informada.</div></div>
+        <div class="step"><div class="step-n">Paso 04</div><div class="step-icon">🚀</div><div class="step-h">Integra y opera</div><div class="step-p">Descarga directo a MT5, Python o NinjaTrader. Soporte directo con el creador incluido en la compra.</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section class="testi">
+    <div class="section-label">Lo que dicen los traders</div>
+    <h2 class="section-h2" style="margin-bottom:.6rem">Resultados que hablan solos.</h2>
+    <p class="section-sub">De traders reales. Sin testimonios fabricados.</p>
+    <div class="testi-grid">
+      <div class="tcard">
+        <div class="tcard-stars"><span class="tstar">★</span><span class="tstar">★</span><span class="tstar">★</span><span class="tstar">★</span><span class="tstar">★</span></div>
+        <div class="tcard-q">"Llevaba 3 años probando robots en MQL5 Market sin éxito. En AlgoVault encontré una estrategia Nivel 4 con 14 meses de track record real verificado. Llevo 6 meses usándola. Profit Factor 2.1 en vivo."</div>
+        <div class="tcard-author"><div class="tcard-av">CM</div><div><div class="tcard-name">Carlos M.</div><div class="tcard-role">Trader independiente · México</div></div></div>
+      </div>
+      <div class="tcard">
+        <div class="tcard-stars"><span class="tstar">★</span><span class="tstar">★</span><span class="tstar">★</span><span class="tstar">★</span><span class="tstar">★</span></div>
+        <div class="tcard-q">"Subí mi primera estrategia en febrero. Para mayo ya tenía 34 ventas. El sistema de certificación me ayudó a cobrar el precio justo — mis compradores confían en los datos, no en promesas."</div>
+        <div class="tcard-author"><div class="tcard-av">TP</div><div><div class="tcard-name">TradingPro_MX</div><div class="tcard-role">Creador verificado · 5 estrategias publicadas</div></div></div>
+      </div>
+      <div class="tcard">
+        <div class="tcard-stars"><span class="tstar">★</span><span class="tstar">★</span><span class="tstar">★</span><span class="tstar">★</span><span class="tstar">★</span></div>
+        <div class="tcard-q">"El Portfolio Builder me cambió la forma de operar. Entendí que tenía 4 estrategias correlacionadas al 94% — básicamente la misma apuesta multiplicada. Ahora opero con riesgo real diversificado."</div>
+        <div class="tcard-author"><div class="tcard-av">AR</div><div><div class="tcard-name">Alejandro R.</div><div class="tcard-role">Gestor de fondos · España</div></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <section class="pricing">
+    <div class="pricing-inner">
+      <div class="section-label" style="text-align:center">Precios</div>
+      <h2 class="section-h2" style="color:#fff;text-align:center;margin-bottom:.6rem">Empieza gratis. Actualiza cuando veas el valor.</h2>
+      <p class="section-sub" style="color:var(--mid)">Sin compromiso de permanencia. Sin tarjeta de crédito para empezar.</p>
+      <div class="plans">
+
+        <div class="plan">
+          <div class="plan-h">
+            <div class="plan-name">Free</div>
+            <div class="plan-price">$0<span> /mes</span></div>
+            <div class="plan-desc">Para explorar el ecosistema sin compromiso</div>
+          </div>
+          <div class="plan-body">
+            <ul class="plan-feats">
+              <li class="pf"><span class="pf-ck ok">✓</span><span class="pf-txt ok">Catálogo completo visible</span></li>
+              <li class="pf"><span class="pf-ck ok">✓</span><span class="pf-txt ok">Score y certificación de cada estrategia</span></li>
+              <li class="pf"><span class="pf-ck ok">✓</span><span class="pf-txt ok">Filtros por mercado, PF, DD y Sharpe</span></li>
+              <li class="pf"><span class="pf-ck ok">✓</span><span class="pf-txt ok">Equity curve básica (último año)</span></li>
+              <li class="pf"><span class="pf-ck no">—</span><span class="pf-txt">Métricas avanzadas (Monte Carlo, Sortino)</span></li>
+              <li class="pf"><span class="pf-ck no">—</span><span class="pf-txt">Portfolio Builder + correlación</span></li>
+              <li class="pf"><span class="pf-ck no">—</span><span class="pf-txt">Estrategias Nivel 4 y 5 (institucional)</span></li>
+              <li class="pf"><span class="pf-ck no">—</span><span class="pf-txt">Descarga de estrategias</span></li>
+            </ul>
+          </div>
+          <div class="plan-foot"><button class="plan-btn free" onclick="gv('marketplace')">Explorar gratis</button></div>
+        </div>
+
+        <div class="plan featured">
+          <div class="plan-badge">MÁS POPULAR</div>
+          <div class="plan-h">
+            <div class="plan-name">Pro</div>
+            <div class="plan-price">$49<span> /mes</span></div>
+            <div class="plan-desc">Para traders que operan en serio</div>
+          </div>
+          <div class="plan-body">
+            <ul class="plan-feats">
+              <li class="pf"><span class="pf-ck ok">✓</span><span class="pf-txt ok">Todo lo del plan Free</span></li>
+              <li class="pf"><span class="pf-ck ok">✓</span><span class="pf-txt ok">Métricas avanzadas desbloqueadas</span></li>
+              <li class="pf"><span class="pf-ck ok">✓</span><span class="pf-txt ok">Portfolio Builder + análisis de correlación</span></li>
+              <li class="pf"><span class="pf-ck ok">✓</span><span class="pf-txt ok">Acceso a estrategias Nivel 4 y 5</span></li>
+              <li class="pf"><span class="pf-ck ok">✓</span><span class="pf-txt ok">Descarga ilimitada de estrategias</span></li>
+              <li class="pf"><span class="pf-ck ok">✓</span><span class="pf-txt ok">14 días prueba por estrategia</span></li>
+              <li class="pf"><span class="pf-ck ok">✓</span><span class="pf-txt ok">Simulaciones Monte Carlo y Walk Forward</span></li>
+              <li class="pf"><span class="pf-ck ok">✓</span><span class="pf-txt ok">Soporte prioritario</span></li>
+            </ul>
+          </div>
+          <div class="plan-foot"><button class="plan-btn pro" onclick="openModal('buyer')">Empezar 14 días gratis →</button></div>
+        </div>
+
+        <div class="plan">
+          <div class="plan-h">
+            <div class="plan-name">Creator</div>
+            <div class="plan-price">$29<span> /mes</span></div>
+            <div class="plan-desc">Para creadores que monetizan su edge</div>
+          </div>
+          <div class="plan-body">
+            <ul class="plan-feats">
+              <li class="pf"><span class="pf-ck ok">✓</span><span class="pf-txt ok">Publicación ilimitada de estrategias</span></li>
+              <li class="pf"><span class="pf-ck ok">✓</span><span class="pf-txt ok">70–80% de comisión por venta</span></li>
+              <li class="pf"><span class="pf-ck ok">✓</span><span class="pf-txt ok">Dashboard de revenue y analytics</span></li>
+              <li class="pf"><span class="pf-ck ok">✓</span><span class="pf-txt ok">Sistema de certificación 5 niveles</span></li>
+              <li class="pf"><span class="pf-ck ok">✓</span><span class="pf-txt ok">Acceso al generador AI (créditos incluidos)</span></li>
+              <li class="pf"><span class="pf-ck ok">✓</span><span class="pf-txt ok">Retiro mensual automático</span></li>
+              <li class="pf"><span class="pf-ck ok">✓</span><span class="pf-txt ok">Insignia "Creador verificado"</span></li>
+              <li class="pf"><span class="pf-ck ok">✓</span><span class="pf-txt ok">Soporte técnico dedicado</span></li>
+            </ul>
+          </div>
+          <div class="plan-foot"><button class="plan-btn creator" onclick="openModal('seller')">Empezar a vender →</button></div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- FINAL CTA -->
+  <section class="final-cta">
+    <div class="fc-glow"></div>
+    <div class="fc-inner">
+      <h2 class="fc-h">Tu próximo edge ya existe.<br>Alguien lo construyó.<br>Encuéntralo hoy.</h2>
+      <p class="fc-p">Más de 1,847 estrategias verificadas esperan. El catálogo es gratuito. La decisión de operar con datos reales es tuya.</p>
+      <div class="fc-btns">
+        <button class="cta-main" onclick="gv('marketplace')">Explorar estrategias gratis</button>
+        <button class="cta-sec" onclick="openModal('seller')">Vender mis estrategias →</button>
+      </div>
+    </div>
+  </section>
+
+</div><!-- /landing -->
+
+<!-- ════════════════════════════════════════
+     MARKETPLACE
+════════════════════════════════════════ -->
+<div id="view-marketplace" class="view">
+  <div class="mkt-hdr">
+    <div class="mkt-hd-inner">
+      <div><div class="mkt-title">Estrategias <em>verificadas</em></div><div class="mkt-sub">Catálogo público · Haz clic en cualquier estrategia para ver su detalle completo</div></div>
+      <div class="mkt-sort">
+        <button class="sort-btn" onclick="sortCards('score',this)">Mejor score</button>
+        <button class="sort-btn" onclick="sortCards('sold',this)">Más vendidas</button>
+        <button class="sort-btn" onclick="sortCards('sr',this)">Sharpe ↑</button>
+        <button class="sort-btn" onclick="sortCards('price',this)">Precio ↑</button>
+      </div>
+    </div>
+  </div>
+  <div class="mkt-body">
+    <div class="filter-tabs" id="filter-tabs">
+      <div class="ftab active" onclick="fm('all',this)">Todas</div>
+      <div class="ftab" onclick="fm('forex',this)">Forex</div>
+      <div class="ftab" onclick="fm('indices',this)">Índices</div>
+      <div class="ftab" onclick="fm('crypto',this)">Crypto</div>
+      <div class="ftab" onclick="fm('commodities',this)">Commodities</div>
+      <div class="ftab" onclick="fm('mt5',this)">MT5</div>
+      <div class="ftab" onclick="fm('python',this)">Python</div>
+    </div>
+    <div class="stats-row">
+      <div class="stat-c"><div class="stat-l">Estrategias activas</div><div class="stat-v">1,847</div><div class="stat-s">+23 esta semana</div></div>
+      <div class="stat-c"><div class="stat-l">Volumen mensual</div><div class="stat-v o">$2.3M</div><div class="stat-s">+18.4% vs anterior</div></div>
+      <div class="stat-c"><div class="stat-l">Traders activos</div><div class="stat-v">12,400</div><div class="stat-s">94 países</div></div>
+      <div class="stat-c"><div class="stat-l">Certificación real</div><div class="stat-v g">68%</div><div class="stat-s">Con track record real</div></div>
+    </div>
+    <div class="free-strip">
+      <div class="fs-badge">MODO FREE</div>
+      <div class="fs-txt">Estás explorando en modo gratuito. El catálogo, las métricas básicas y el score son completamente visibles. <strong>Las métricas avanzadas, Monte Carlo y estrategias Nivel 4–5 requieren Plan Pro.</strong></div>
+      <div class="fs-link" onclick="openModal('buyer')">Activar Pro →</div>
+    </div>
+    <div class="card-grid" id="card-grid"></div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     DETAIL
+════════════════════════════════════════ -->
+<div id="view-detail" class="view">
+  <div class="detail-wrap">
+    <div class="back-btn" onclick="gv('marketplace')">← Volver al marketplace</div>
+    <div class="detail-layout">
+      <div>
+        <div class="detail-head">
+          <div class="d-ico" id="d-ico"></div>
+          <div>
+            <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:3px">
+              <div class="d-title" id="d-title"></div>
+              <div class="card-badge" id="d-badge"></div>
+            </div>
+            <div class="d-auth" id="d-auth"></div>
+            <div class="d-tags" id="d-tags"></div>
+          </div>
+        </div>
+        <div class="sec-label">Métricas clave · Verificadas</div>
+        <div class="metrics-6" id="d-metrics"></div>
+        <div class="sec-label">Curva de equity · Cuenta real</div>
+        <div class="chart-box"><div class="cb-label" id="d-eqlbl"></div><div style="position:relative;height:200px"><canvas id="d-eq"></canvas></div></div>
+        <div class="sec-label">Retornos mensuales</div>
+        <div class="chart-box"><div class="cb-label">Histograma · Últimos 18 meses</div><div style="position:relative;height:130px"><canvas id="d-dist"></canvas></div></div>
+
+        <!-- BLURRED ADVANCED METRICS -->
+        <div class="sec-label">Análisis avanzado · Plan Pro</div>
+        <div class="blur-section">
+          <div class="blur-content">
+            <div class="metrics-6">
+              <div class="metric-box"><div class="mb-l">Sortino Ratio</div><div class="mb-v">2.41</div><div class="mb-s">Ajustado a riesgo real</div></div>
+              <div class="metric-box"><div class="mb-l">Calmar Ratio</div><div class="mb-v">3.08</div><div class="mb-s">Retorno / Max DD</div></div>
+              <div class="metric-box"><div class="mb-l">Omega Ratio</div><div class="mb-v">1.84</div><div class="mb-s">Prob. de ganancia</div></div>
+              <div class="metric-box"><div class="mb-l">Monte Carlo P5</div><div class="mb-v">+14.2%</div><div class="mb-s">Peor escenario 5%</div></div>
+              <div class="metric-box"><div class="mb-l">Walk Forward</div><div class="mb-v">84.3%</div><div class="mb-s">OOS consistency</div></div>
+              <div class="metric-box"><div class="mb-l">Recovery Factor</div><div class="mb-v">6.7</div><div class="mb-s">Recuperación por DD</div></div>
+            </div>
+          </div>
+          <div class="blur-gate">
+            <div class="bg-icon">🔒</div>
+            <div class="bg-title">Análisis avanzado</div>
+            <div class="bg-desc">Monte Carlo, Walk Forward, Sortino, Calmar y más. Solo disponible en Plan Pro.</div>
+            <button class="bg-btn" onclick="openModal('buyer')">Activar Plan Pro — $49/mes →</button>
+          </div>
+        </div>
+
+        <!-- BLURRED MONTHLY RETURNS TABLE -->
+        <div class="sec-label" style="margin-top:1.4rem">Retornos mensuales detallados · Plan Pro</div>
+        <div class="blur-section">
+          <div class="blur-content">
+            <div class="chart-box"><div style="height:80px;background:var(--white);border-radius:6px"></div></div>
+          </div>
+          <div class="blur-gate" style="min-height:80px">
+            <div class="bg-icon" style="font-size:18px">📅</div>
+            <div class="bg-title" style="font-size:14px">Tabla mensual completa</div>
+            <div class="bg-desc" style="font-size:11px;margin-bottom:8px">Retorno por año y mes desde el inicio. Requiere Plan Pro.</div>
+            <button class="bg-btn" style="font-size:12px;padding:7px 16px" onclick="openModal('buyer')">Desbloquear →</button>
+          </div>
+        </div>
+
+        <div class="sec-label" style="margin-top:1.4rem">Nivel de certificación</div>
+        <div class="cert-levels" id="d-cert"></div>
+      </div>
+
+      <!-- PURCHASE CARD -->
+      <div>
+        <div class="purchase-card">
+          <div class="pc-head">
+            <div class="pc-price" id="d-price"></div>
+            <div class="pc-note">Licencia perpetua · Actualizaciones 12 meses</div>
+          </div>
+          <div class="pc-body">
+            <button class="pc-btn-main">Comprar ahora →</button>
+            <button class="pc-btn-trial">Probar 14 días gratis</button>
+            <button class="pc-btn-add" onclick="alert('Añadido al Portfolio Builder')">+ Añadir al Portfolio Builder</button>
+            <ul class="incl-list">
+              <li class="incl-item"><span class="incl-ok">✓</span>Código fuente completo</li>
+              <li class="incl-item"><span class="incl-ok">✓</span>Parámetros optimizados documentados</li>
+              <li class="incl-item"><span class="incl-ok">✓</span>Backtest histórico 10 años</li>
+              <li class="incl-item"><span class="incl-ok">✓</span>Manual de uso + video walkthrough</li>
+              <li class="incl-item"><span class="incl-ok">✓</span>Soporte directo con el creador</li>
+              <li class="incl-item"><span class="incl-ok">✓</span>Compatible demo y cuenta real</li>
+            </ul>
+            <div class="scarcity-note" id="d-scarcity"></div>
+            <div class="seller-card">
+              <div class="seller-top">
+                <div class="seller-av" id="d-sav"></div>
+                <div><div class="seller-name" id="d-sname"></div><div class="seller-role">Creador verificado · AlgoVault Pro</div></div>
+              </div>
+              <div class="seller-stats">
+                <div><div class="ss-v" id="d-ssold"></div><div class="ss-l">Ventas</div></div>
+                <div><div class="ss-v" id="d-srat"></div><div class="ss-l">Rating</div></div>
+                <div><div class="ss-v" id="d-sst"></div><div class="ss-l">Estrategias</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     CERTIFICAR
+════════════════════════════════════════ -->
+<div id="view-verify" class="view">
+<style>
+.cert-wrap{max-width:960px;margin:0 auto;padding:1.75rem 2rem}
+.cert-hdr{background:var(--ink);border-radius:14px;padding:1.5rem 2rem;margin-bottom:1.75rem;border:.5px solid rgba(201,168,76,.18);position:relative;overflow:hidden}
+.cert-hdr::after{content:'';position:absolute;top:-60px;right:-60px;width:240px;height:240px;background:radial-gradient(circle,rgba(201,168,76,.07) 0%,transparent 70%)}
+.cert-kicker{font-size:10px;font-family:var(--M);text-transform:uppercase;letter-spacing:2px;color:var(--gold);margin-bottom:5px}
+.cert-hdr-h{font-family:var(--D);font-size:26px;color:#fff;position:relative;z-index:1}
+.cert-hdr-s{font-size:12px;color:var(--mid);font-family:var(--M);margin-top:4px;position:relative;z-index:1}
+
+/* STEPPER */
+.stepper{display:flex;align-items:center;margin-bottom:2rem;gap:0}
+.step-dot{display:flex;flex-direction:column;align-items:center;flex:1;position:relative;cursor:pointer}
+.step-dot::before{content:'';position:absolute;top:16px;left:calc(-50% + 18px);right:calc(50% + 18px);height:2px;background:var(--bd2);z-index:0}
+.step-dot:first-child::before{display:none}
+.step-dot.done::before,.step-dot.active::before{background:var(--gold)}
+.step-circ{width:34px;height:34px;border-radius:50%;border:2px solid var(--bd2);display:flex;align-items:center;justify-content:center;font-family:var(--M);font-size:12px;font-weight:600;color:var(--mid);background:#fff;z-index:1;transition:all .25s}
+.step-dot.done .step-circ{background:var(--gold);border-color:var(--gold);color:var(--ink)}
+.step-dot.active .step-circ{border-color:var(--gold);color:var(--gold);box-shadow:0 0 0 4px rgba(201,168,76,.15)}
+.step-lbl{font-size:10px;font-family:var(--M);text-transform:uppercase;letter-spacing:.6px;color:var(--mid);margin-top:6px;text-align:center}
+.step-dot.active .step-lbl{color:var(--gold)}
+.step-dot.done .step-lbl{color:var(--ink)}
+
+/* SCORE RING */
+.score-ring-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;margin:1rem 0}
+.score-ring-label{font-size:11px;font-family:var(--M);text-transform:uppercase;letter-spacing:1px;color:var(--mid);margin-top:.5rem}
+
+/* STEPS */
+.vstep{display:none}.vstep.active{display:block}
+.vstep-h{font-family:var(--D);font-size:20px;color:var(--ink);margin-bottom:.35rem}
+.vstep-s{font-size:12px;color:var(--mid);font-family:var(--M);margin-bottom:1.5rem}
+.v-grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.v-grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.v-label{font-size:10px;font-family:var(--M);text-transform:uppercase;letter-spacing:1px;color:var(--mid);margin-bottom:5px;display:block}
+.v-input{width:100%;padding:10px 12px;background:var(--white);border:.5px solid var(--bd2);border-radius:6px;color:var(--ink);font-family:var(--M);font-size:13px;outline:none;transition:border-color .15s;margin-bottom:0}
+.v-input:focus{border-color:var(--gold)}
+.v-select{width:100%;padding:10px 12px;background:var(--white);border:.5px solid var(--bd2);border-radius:6px;color:var(--ink);font-family:var(--M);font-size:13px;outline:none;appearance:none;cursor:pointer}
+.v-select:focus{border-color:var(--gold)}
+.field-row{margin-bottom:12px}
+.metric-hint{font-size:10px;color:var(--mid);font-family:var(--M);margin-top:3px}
+.metric-hint.ok{color:var(--gain)}.metric-hint.warn{color:var(--warn)}.metric-hint.bad{color:var(--loss)}
+
+/* ROBUSTEZ CHECKS */
+.rob-checks{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:1.25rem}
+.rob-item{border:.5px solid var(--bd2);border-radius:8px;padding:12px 14px;cursor:pointer;transition:all .18s;display:flex;align-items:flex-start;gap:10px}
+.rob-item:hover{border-color:var(--gold)}
+.rob-item.checked{border-color:var(--gold);background:var(--g3)}
+.rob-chk{width:18px;height:18px;border:.5px solid var(--bd2);border-radius:4px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:11px;transition:all .15s;margin-top:1px}
+.rob-item.checked .rob-chk{background:var(--gold);border-color:var(--gold);color:var(--ink)}
+.rob-title{font-size:12px;font-weight:600;color:var(--ink)}.rob-desc{font-size:10px;color:var(--mid);font-family:var(--M);margin-top:2px}
+
+/* LIVE ACCOUNT */
+.live-input-wrap{position:relative}
+.live-badge{position:absolute;right:10px;top:50%;transform:translateY(-50%);padding:2px 8px;border-radius:3px;font-size:10px;font-family:var(--M);font-weight:600}
+.lb-ok{background:var(--gain2);color:var(--gain)}.lb-pend{background:var(--warn2);color:var(--warn)}
+
+/* SCORE RESULT */
+.score-result{display:grid;grid-template-columns:200px 1fr;gap:1.5rem;align-items:start}
+.score-circle-wrap{display:flex;flex-direction:column;align-items:center}
+.score-breakdown{list-style:none}
+.sb-row{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:.5px solid var(--bd)}
+.sb-row:last-child{border-bottom:none}
+.sb-lbl{font-size:12px;color:var(--mid);flex:1}.sb-bar-wrap{width:100px;height:6px;background:var(--ghost);border-radius:3px;overflow:hidden}.sb-bar{height:100%;border-radius:3px;transition:width .8s ease}
+.sb-val{font-size:12px;font-weight:600;font-family:var(--M);color:var(--ink);width:36px;text-align:right}
+.cert-result-lvl{padding:12px 16px;border-radius:8px;display:flex;align-items:center;gap:12px;margin-top:1rem}
+.crl-stars{font-size:18px;letter-spacing:2px;color:var(--gold)}
+.crl-h{font-size:14px;font-weight:700;color:var(--ink)}.crl-s{font-size:11px;color:var(--mid);font-family:var(--M)}
+.missing-list{margin-top:.75rem}
+.ml-item{display:flex;align-items:flex-start;gap:7px;font-size:11px;color:var(--mid);font-family:var(--M);padding:4px 0;border-bottom:.5px solid var(--bd)}
+.ml-item:last-child{border-bottom:none}.ml-x{color:var(--loss);flex-shrink:0}
+
+.cert-layout{display:grid;grid-template-columns:1fr 300px;gap:1.5rem;align-items:start}
+.price-card-vert{background:#fff;border:.5px solid var(--bd2);border-radius:12px;overflow:hidden;position:sticky;top:68px}
+.pcv-h{padding:14px 18px;background:var(--ink)}.pcv-t{font-size:10px;font-family:var(--M);text-transform:uppercase;letter-spacing:1.5px;color:var(--gold);margin-bottom:4px}
+.pcv-body{padding:14px 18px}
+.cert-price-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:.5px solid var(--bd)}
+.cert-price-row:last-child{border-bottom:none}
+.cpr-name{font-size:12px;color:var(--mid)}.cpr-stars{font-size:11px;color:var(--gold)}.cpr-price{font-size:13px;font-weight:600;font-family:var(--M);color:var(--ink)}
+.v-btn-row{display:flex;gap:8px;margin-top:1.5rem}
+.v-btn-back{padding:11px 22px;border:.5px solid var(--bd2);background:transparent;color:var(--mid);font-family:var(--B);font-size:13px;font-weight:500;border-radius:6px;cursor:pointer;transition:all .15s}
+.v-btn-back:hover{color:var(--ink);border-color:var(--bd2)}
+.v-btn-next{flex:1;padding:11px;border:none;background:var(--gold);color:var(--ink);font-family:var(--B);font-size:14px;font-weight:700;border-radius:6px;cursor:pointer;transition:all .15s}
+.v-btn-next:hover{background:var(--gold2)}
+.v-btn-pub{flex:1;padding:11px;border:none;background:var(--gain);color:#fff;font-family:var(--B);font-size:14px;font-weight:700;border-radius:6px;cursor:pointer;transition:all .15s}
+.v-btn-pub:hover{background:#1f9057}
+.progress-bar{height:3px;background:var(--ghost);border-radius:2px;margin-bottom:2rem;overflow:hidden}
+.progress-fill{height:100%;background:var(--gold);border-radius:2px;transition:width .4s ease}
+</style>
+<div class="cert-wrap">
+  <div class="cert-hdr">
+    <div class="cert-kicker">Sistema de certificación · 5 niveles</div>
+    <div class="cert-hdr-h">Certifica tu estrategia</div>
+    <div class="cert-hdr-s">Validación cuantitativa real · A mayor nivel, mayor precio y confianza del comprador</div>
+  </div>
+
+  <div class="cert-layout">
+    <div>
+      <!-- STEPPER -->
+      <div class="stepper" id="cert-stepper">
+        <div class="step-dot active" id="sdot-1" onclick="goStep(1)"><div class="step-circ">1</div><div class="step-lbl">Básico</div></div>
+        <div class="step-dot" id="sdot-2" onclick="goStep(2)"><div class="step-circ">2</div><div class="step-lbl">Métricas</div></div>
+        <div class="step-dot" id="sdot-3" onclick="goStep(3)"><div class="step-circ">3</div><div class="step-lbl">Robustez</div></div>
+        <div class="step-dot" id="sdot-4" onclick="goStep(4)"><div class="step-circ">4</div><div class="step-lbl">Cuenta real</div></div>
+        <div class="step-dot" id="sdot-5" onclick="goStep(5)"><div class="step-circ">5</div><div class="step-lbl">Score</div></div>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" id="cert-progress" style="width:20%"></div></div>
+
+      <!-- STEP 1 -->
+      <div class="vstep active" id="vs-1">
+        <div class="vstep-h">Información básica</div>
+        <div class="vstep-s">Cuéntanos sobre tu estrategia. Esto determinará la categoría en el marketplace.</div>
+        <div class="field-row">
+          <label class="v-label">Nombre de la estrategia</label>
+          <input class="v-input" id="v-name" type="text" placeholder="ej. Nasdaq Momentum Alpha v3" oninput="liveScore()">
+        </div>
+        <div class="v-grid2">
+          <div class="field-row">
+            <label class="v-label">Mercado</label>
+            <select class="v-select" id="v-mkt" onchange="liveScore()"><option value="">Seleccionar</option><option>Forex</option><option>Índices (Nasdaq, S&P500)</option><option>Oro / Commodities</option><option>Crypto</option><option>Futuros</option></select>
+          </div>
+          <div class="field-row">
+            <label class="v-label">Plataforma</label>
+            <select class="v-select" id="v-plt" onchange="liveScore()"><option value="">Seleccionar</option><option>MetaTrader 5</option><option>MetaTrader 4</option><option>Python</option><option>NinjaTrader 8</option><option>TradingView</option><option>cTrader</option></select>
+          </div>
+        </div>
+        <div class="v-grid2">
+          <div class="field-row">
+            <label class="v-label">Timeframe principal</label>
+            <select class="v-select" id="v-tf" onchange="liveScore()"><option value="">Seleccionar</option><option>1 minuto</option><option>5 minutos</option><option>15 minutos</option><option>1 hora</option><option>4 horas</option><option>Daily</option><option>Multi-timeframe</option></select>
+          </div>
+          <div class="field-row">
+            <label class="v-label">Tipo de estrategia</label>
+            <select class="v-select" onchange="liveScore()"><option value="">Seleccionar</option><option>Trend Following</option><option>Mean Reversion</option><option>Breakout</option><option>Scalping</option><option>Arbitraje</option><option>Cuantitativo / ML</option></select>
+          </div>
+        </div>
+        <div class="field-row">
+          <label class="v-label">Descripción breve (para el marketplace)</label>
+          <textarea class="v-input" rows="3" placeholder="Describe el edge de tu estrategia en 2–3 líneas. Sin promesas — describe el mecanismo." style="resize:none;line-height:1.5"></textarea>
+        </div>
+        <div class="v-btn-row">
+          <button class="v-btn-next" onclick="goStep(2)">Siguiente: Métricas de backtest →</button>
+        </div>
+      </div>
+
+      <!-- STEP 2 -->
+      <div class="vstep" id="vs-2">
+        <div class="vstep-h">Métricas del backtest</div>
+        <div class="vstep-s">Introduce los resultados de tu backtest. Usamos estos datos para calcular el score inicial (Nivel 1).</div>
+        <div class="v-grid3">
+          <div class="field-row">
+            <label class="v-label">Profit Factor</label>
+            <input class="v-input" id="v-pf" type="number" step="0.01" placeholder="ej. 1.85" oninput="calcHint('pf',this.value)">
+            <div class="metric-hint" id="h-pf">Mínimo requerido: 1.3</div>
+          </div>
+          <div class="field-row">
+            <label class="v-label">Sharpe Ratio</label>
+            <input class="v-input" id="v-sr" type="number" step="0.01" placeholder="ej. 1.42" oninput="calcHint('sr',this.value)">
+            <div class="metric-hint" id="h-sr">Mínimo requerido: 0.8</div>
+          </div>
+          <div class="field-row">
+            <label class="v-label">Max Drawdown (%)</label>
+            <input class="v-input" id="v-dd" type="number" step="0.1" placeholder="ej. 12.4" oninput="calcHint('dd',this.value)">
+            <div class="metric-hint" id="h-dd">Máximo permitido: 30%</div>
+          </div>
+        </div>
+        <div class="v-grid3">
+          <div class="field-row">
+            <label class="v-label">Win Rate (%)</label>
+            <input class="v-input" id="v-wr" type="number" step="0.1" placeholder="ej. 58.4" oninput="liveScore()">
+            <div class="metric-hint">Porcentaje de trades ganadores</div>
+          </div>
+          <div class="field-row">
+            <label class="v-label">Total trades</label>
+            <input class="v-input" id="v-tr" type="number" placeholder="ej. 842" oninput="calcHint('tr',this.value)">
+            <div class="metric-hint" id="h-tr">Mínimo requerido: 200</div>
+          </div>
+          <div class="field-row">
+            <label class="v-label">Años de histórico</label>
+            <input class="v-input" id="v-yrs" type="number" step="0.5" placeholder="ej. 5.5" oninput="calcHint('yrs',this.value)">
+            <div class="metric-hint" id="h-yrs">Mínimo requerido: 3 años</div>
+          </div>
+        </div>
+        <div class="v-grid2">
+          <div class="field-row">
+            <label class="v-label">Retorno anual (%)</label>
+            <input class="v-input" id="v-ret" type="number" step="0.1" placeholder="ej. 38.2" oninput="liveScore()">
+            <div class="metric-hint">Retorno anual compuesto</div>
+          </div>
+          <div class="field-row">
+            <label class="v-label">Recovery Factor</label>
+            <input class="v-input" id="v-rf" type="number" step="0.1" placeholder="ej. 4.2" oninput="liveScore()">
+            <div class="metric-hint">Retorno total / Max Drawdown</div>
+          </div>
+        </div>
+        <div class="field-row" style="background:var(--g3);border:.5px dashed rgba(201,168,76,.4);border-radius:8px;padding:12px 14px;margin-top:4px">
+          <label class="v-label" style="color:var(--gold)">Subir reporte de backtest (opcional)</label>
+          <input type="file" accept=".html,.csv,.xlsx,.pdf" style="font-family:var(--M);font-size:12px;color:var(--mid);width:100%">
+          <div class="metric-hint">MT5 .html · .csv · Excel · PDF — extraemos métricas automáticamente</div>
+        </div>
+        <div class="v-btn-row">
+          <button class="v-btn-back" onclick="goStep(1)">← Atrás</button>
+          <button class="v-btn-next" onclick="goStep(3)">Siguiente: Pruebas de robustez →</button>
+        </div>
+      </div>
+
+      <!-- STEP 3 -->
+      <div class="vstep" id="vs-3">
+        <div class="vstep-h">Pruebas de robustez</div>
+        <div class="vstep-s">Marca las pruebas que has realizado. Cada una suma puntos al score y puede desbloquear Nivel 2.</div>
+        <div class="rob-checks">
+          <div class="rob-item" id="rob-mc" onclick="toggleRob(this,'mc')">
+            <div class="rob-chk" id="chk-mc"></div>
+            <div><div class="rob-title">Monte Carlo (1,000 sim.)</div><div class="rob-desc">Simulación de varianza aleatoria sobre la serie de trades</div></div>
+          </div>
+          <div class="rob-item" id="rob-wf" onclick="toggleRob(this,'wf')">
+            <div class="rob-chk" id="chk-wf"></div>
+            <div><div class="rob-title">Walk Forward Analysis</div><div class="rob-desc">Validación rolling out-of-sample con ventanas móviles</div></div>
+          </div>
+          <div class="rob-item" id="rob-oos" onclick="toggleRob(this,'oos')">
+            <div class="rob-chk" id="chk-oos"></div>
+            <div><div class="rob-title">Out-of-Sample &gt;30%</div><div class="rob-desc">Rendimiento en datos no usados en la optimización</div></div>
+          </div>
+          <div class="rob-item" id="rob-sa" onclick="toggleRob(this,'sa')">
+            <div class="rob-chk" id="chk-sa"></div>
+            <div><div class="rob-title">Sensitivity Analysis</div><div class="rob-desc">Estabilidad de parámetros ante variaciones ±20%</div></div>
+          </div>
+        </div>
+        <div style="background:var(--info2);border:.5px solid rgba(24,95,165,.2);border-radius:8px;padding:12px 14px;margin-bottom:1.25rem">
+          <div style="font-size:11px;font-weight:600;color:var(--info);margin-bottom:3px">ℹ️ ¿Por qué importa la robustez?</div>
+          <div style="font-size:11px;color:var(--mid)">Un backtest perfecto sin robustez es un overfit. Los compradores Pro pueden ver los resultados de estas pruebas — estrategias robustas venden 3× más.</div>
+        </div>
+        <div class="field-row">
+          <label class="v-label">Subir evidencia de pruebas (opcional)</label>
+          <input type="file" accept=".pdf,.html,.xlsx,.csv" style="font-family:var(--M);font-size:12px;color:var(--mid);width:100%">
+        </div>
+        <div class="v-btn-row">
+          <button class="v-btn-back" onclick="goStep(2)">← Atrás</button>
+          <button class="v-btn-next" onclick="goStep(4)">Siguiente: Cuenta real →</button>
+        </div>
+      </div>
+
+      <!-- STEP 4 -->
+      <div class="vstep" id="vs-4">
+        <div class="vstep-h">Verificación de cuenta real</div>
+        <div class="vstep-s">Niveles 3–5 requieren track record en cuenta real verificada por terceros. Es lo que más valor da al comprador.</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:1.25rem">
+          <div style="border:.5px solid var(--bd2);border-radius:10px;padding:1rem 1.1rem">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:.75rem">
+              <div style="width:28px;height:28px;background:#1da462;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px">🔗</div>
+              <div><div style="font-size:13px;font-weight:600;color:var(--ink)">Myfxbook</div><div style="font-size:10px;font-family:var(--M);color:var(--mid)">Verificación automática</div></div>
+            </div>
+            <label class="v-label">URL pública de Myfxbook</label>
+            <div class="live-input-wrap">
+              <input class="v-input" id="v-mfx" type="url" placeholder="https://myfxbook.com/members/..." oninput="checkLive('mfx',this.value)">
+              <div class="live-badge" id="badge-mfx" style="display:none"></div>
+            </div>
+          </div>
+          <div style="border:.5px solid var(--bd2);border-radius:10px;padding:1rem 1.1rem">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:.75rem">
+              <div style="width:28px;height:28px;background:#0066cc;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px">📊</div>
+              <div><div style="font-size:13px;font-weight:600;color:var(--ink)">Darwinex</div><div style="font-size:10px;font-family:var(--M);color:var(--mid)">Verificación automática</div></div>
+            </div>
+            <label class="v-label">Darwin ID o URL de Darwinex</label>
+            <div class="live-input-wrap">
+              <input class="v-input" id="v-drw" type="text" placeholder="ej. ZVQ.4.22 o URL pública" oninput="checkLive('drw',this.value)">
+              <div class="live-badge" id="badge-drw" style="display:none"></div>
+            </div>
+          </div>
+        </div>
+        <div class="v-grid2">
+          <div class="field-row">
+            <label class="v-label">Meses en cuenta real</label>
+            <input class="v-input" id="v-livemons" type="number" placeholder="ej. 18" oninput="liveScore()">
+            <div class="metric-hint">Nivel 3 req. mín. 3m · Nivel 4 req. 12m · Nivel 5 req. 24m</div>
+          </div>
+          <div class="field-row">
+            <label class="v-label">Consistencia mensual (%)</label>
+            <input class="v-input" id="v-cons" type="number" step="1" placeholder="ej. 78" oninput="liveScore()">
+            <div class="metric-hint">% de meses con retorno positivo</div>
+          </div>
+        </div>
+        <div style="background:var(--gain2);border:.5px solid rgba(26,122,74,.25);border-radius:8px;padding:12px 14px">
+          <div style="font-size:11px;font-weight:600;color:var(--gain);margin-bottom:3px">✓ ¿Sin cuenta real todavía?</div>
+          <div style="font-size:11px;color:var(--mid)">Puedes publicar con Nivel 1 o 2 (backtest + robustez) y actualizar la certificación cuando tengas track record real. Las estrategias Nivel 3+ venden 5× más que Nivel 1.</div>
+        </div>
+        <div class="v-btn-row" style="margin-top:1.25rem">
+          <button class="v-btn-back" onclick="goStep(3)">← Atrás</button>
+          <button class="v-btn-next" onclick="goStep(5);computeScore()">Ver mi score →</button>
+        </div>
+      </div>
+
+      <!-- STEP 5 — SCORE RESULT -->
+      <div class="vstep" id="vs-5">
+        <div class="vstep-h">Tu score AlgoVault</div>
+        <div class="vstep-s">Calculado en base a los datos que ingresaste. Puedes mejorar el score añadiendo track record real.</div>
+        <div class="score-result">
+          <div class="score-circle-wrap">
+            <svg width="160" height="160" viewBox="0 0 160 160">
+              <circle cx="80" cy="80" r="66" fill="none" stroke="var(--ghost)" stroke-width="10"/>
+              <circle cx="80" cy="80" r="66" fill="none" stroke="var(--gold)" stroke-width="10" stroke-linecap="round"
+                stroke-dasharray="414.7" id="score-arc" stroke-dashoffset="414.7" transform="rotate(-90 80 80)"
+                style="transition:stroke-dashoffset 1.2s ease"/>
+              <text x="80" y="74" text-anchor="middle" font-family="IBM Plex Mono" font-size="36" font-weight="700" fill="#0D0F14" id="score-num">0</text>
+              <text x="80" y="94" text-anchor="middle" font-family="IBM Plex Mono" font-size="11" fill="#6B7694">/ 100</text>
+            </svg>
+            <div class="score-ring-label">Score AlgoVault</div>
+          </div>
+          <div>
+            <div class="cert-result-lvl" id="cert-result-lvl" style="background:var(--g3);border:.5px solid rgba(201,168,76,.3)">
+              <div class="crl-stars" id="crl-stars">★</div>
+              <div><div class="crl-h" id="crl-h">Nivel 1 · Backtest</div><div class="crl-s" id="crl-s">Completando datos...</div></div>
+            </div>
+            <ul class="score-breakdown" style="margin-top:1rem" id="score-bd">
+              <li class="sb-row"><span class="sb-lbl">Backtest básico</span><div class="sb-bar-wrap"><div class="sb-bar" style="width:0%;background:var(--gold)" id="bar-bt"></div></div><span class="sb-val" id="val-bt">0</span></li>
+              <li class="sb-row"><span class="sb-lbl">Robustez</span><div class="sb-bar-wrap"><div class="sb-bar" style="width:0%;background:var(--info)" id="bar-rob"></div></div><span class="sb-val" id="val-rob">0</span></li>
+              <li class="sb-row"><span class="sb-lbl">Cuenta real</span><div class="sb-bar-wrap"><div class="sb-bar" style="width:0%;background:var(--gain)" id="bar-live"></div></div><span class="sb-val" id="val-live">0</span></li>
+              <li class="sb-row"><span class="sb-lbl">Track record</span><div class="sb-bar-wrap"><div class="sb-bar" style="width:0%;background:var(--gold)" id="bar-tr"></div></div><span class="sb-val" id="val-tr2">0</span></li>
+              <li class="sb-row"><span class="sb-lbl">Consistencia</span><div class="sb-bar-wrap"><div class="sb-bar" style="width:0%;background:var(--gain)" id="bar-cons"></div></div><span class="sb-val" id="val-cons">0</span></li>
+              <li class="sb-row"><span class="sb-lbl">Métricas avanzadas</span><div class="sb-bar-wrap"><div class="sb-bar" style="width:0%;background:var(--slate2)" id="bar-adv"></div></div><span class="sb-val" id="val-adv">0</span></li>
+            </ul>
+            <div class="missing-list" id="missing-list"></div>
+          </div>
+        </div>
+        <div class="v-btn-row" style="margin-top:1.5rem">
+          <button class="v-btn-back" onclick="goStep(4)">← Editar datos</button>
+          <button class="v-btn-pub" onclick="alert('¡Estrategia enviada para revisión! Te notificaremos en 24–48 horas por email.')">Publicar en marketplace →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SIDEBAR PRECIOS -->
+    <div>
+      <div class="price-card-vert">
+        <div class="pcv-h"><div class="pcv-t">Costo de certificación</div></div>
+        <div class="pcv-body">
+          <div class="cert-price-row"><span class="cpr-name">Nivel 1 · Backtest</span><div><span class="cpr-stars">★</span></div><span class="cpr-price" style="color:var(--gain)">Gratis</span></div>
+          <div class="cert-price-row"><span class="cpr-name">Nivel 2 · Robustez</span><div><span class="cpr-stars">★★</span></div><span class="cpr-price">$99</span></div>
+          <div class="cert-price-row"><span class="cpr-name">Nivel 3 · Cuenta real</span><div><span class="cpr-stars">★★★</span></div><span class="cpr-price">$299</span></div>
+          <div class="cert-price-row"><span class="cpr-name">Nivel 4 · Track record</span><div><span class="cpr-stars">★★★★</span></div><span class="cpr-price">$599</span></div>
+          <div class="cert-price-row"><span class="cpr-name">Nivel 5 · Institucional</span><div><span class="cpr-stars">★★★★★</span></div><span class="cpr-price">$1,200</span></div>
+          <div style="margin-top:1rem;padding:10px;background:var(--g3);border:.5px solid rgba(201,168,76,.2);border-radius:6px">
+            <div style="font-size:10px;font-family:var(--M);text-transform:uppercase;letter-spacing:.8px;color:var(--gold);margin-bottom:4px">ROI del creador</div>
+            <div style="font-size:12px;color:var(--mid);line-height:1.6">Una estrategia Nivel 3 a $299 USD recupera el costo de certificación con <strong>1 sola venta</strong>. El promedio de ventas mensuales de estrategias certificadas es de 8 unidades.</div>
+          </div>
+          <div style="margin-top:10px;padding:10px;background:var(--info2);border:.5px solid rgba(24,95,165,.2);border-radius:6px">
+            <div style="font-size:11px;color:var(--info);font-family:var(--M)">ℹ️ La certificación es un pago único. No hay cuota mensual adicional por mantener el nivel.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ════════════════════════════════════════
+     PORTFOLIO BUILDER
+════════════════════════════════════════ -->
+<div id="view-portfolio" class="view">
+<style>
+.pb-wrap{max-width:1300px;margin:0 auto;padding:1.75rem 2rem}
+.pb-hdr{background:var(--ink);border-radius:14px;padding:1.5rem 2rem;margin-bottom:1.75rem;border:.5px solid rgba(201,168,76,.18);position:relative;overflow:hidden}
+.pb-hdr::after{content:'';position:absolute;top:-60px;right:-60px;width:220px;height:220px;background:radial-gradient(circle,rgba(26,122,74,.07) 0%,transparent 70%)}
+.pb-layout{display:grid;grid-template-columns:360px 1fr;gap:1.5rem;align-items:start}
+.pb-panel{background:#fff;border:.5px solid var(--bd);border-radius:12px;overflow:hidden;position:sticky;top:68px}
+.pbp-hd{padding:12px 16px;background:var(--ink2);border-bottom:.5px solid rgba(255,255,255,.05)}
+.pbp-t{font-size:10px;font-family:var(--M);text-transform:uppercase;letter-spacing:1.5px;color:var(--gold)}
+.pbp-body{padding:14px 16px}
+.pb-strat-list{list-style:none;margin-bottom:1rem}
+.pbsl-item{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:.5px solid var(--bd)}
+.pbsl-item:last-child{border-bottom:none}
+.pbsl-ico{width:30px;height:30px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:var(--M);font-size:10px;font-weight:600;flex-shrink:0;border:.5px solid var(--bd)}
+.pbsl-name{flex:1;font-size:12px;font-weight:500;color:var(--ink);line-height:1.2}.pbsl-code{font-size:10px;color:var(--mid);font-family:var(--M)}
+.pbsl-pct{font-size:13px;font-weight:600;font-family:var(--M);color:var(--ink);width:36px;text-align:right}
+.pbsl-rm{width:18px;height:18px;border-radius:50%;border:.5px solid var(--bd2);background:transparent;color:var(--mid);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:12px;transition:all .15s;flex-shrink:0}
+.pbsl-rm:hover{background:var(--loss2);border-color:var(--loss);color:var(--loss)}
+
+/* SLIDERS */
+.slider-section{margin-bottom:1rem}
+.slider-row{margin-bottom:10px;padding:10px 14px;border:.5px solid var(--bd);border-radius:8px;background:var(--white)}
+.sr-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.sr-name{font-size:11px;font-weight:500;color:var(--ink)}.sr-pct{font-size:13px;font-weight:700;font-family:var(--M);color:var(--ink)}
+.pb-slider{width:100%;-webkit-appearance:none;appearance:none;height:4px;border-radius:2px;outline:none;cursor:pointer;background:var(--ghost)}
+.pb-slider::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--gold);cursor:pointer;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.2)}
+.pb-slider.blue::-webkit-slider-thumb{background:var(--info)}
+.pb-slider.green::-webkit-slider-thumb{background:var(--gain)}
+.total-pct-bar{background:var(--white);border:.5px solid var(--bd);border-radius:6px;padding:10px 14px;margin-bottom:1rem;display:flex;align-items:center;justify-content:space-between}
+.tpb-label{font-size:11px;font-family:var(--M);color:var(--mid)}.tpb-val{font-size:16px;font-weight:700;font-family:var(--M)}
+.tpb-val.ok{color:var(--gain)}.tpb-val.warn{color:var(--warn)}.tpb-val.over{color:var(--loss)}
+.pb-btn-analyze{width:100%;padding:12px;border:none;background:var(--gold);color:var(--ink);font-family:var(--B);font-size:14px;font-weight:700;border-radius:6px;cursor:pointer;transition:all .15s}
+.pb-btn-analyze:hover{background:var(--gold2)}
+.pb-btn-add{width:100%;padding:9px;border:.5px solid var(--bd2);background:transparent;color:var(--mid);font-family:var(--B);font-size:12px;border-radius:5px;cursor:pointer;margin-bottom:10px;transition:all .15s}
+.pb-btn-add:hover{border-color:var(--gold);color:var(--gold)}
+
+/* CORR MATRIX */
+.corr-matrix{border-collapse:collapse;font-family:var(--M);font-size:11px;width:100%}
+.corr-matrix td,.corr-matrix th{padding:7px 10px;text-align:center;border:.5px solid var(--bd)}
+.corr-matrix th{font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.5px;color:var(--mid);background:var(--white)}
+.corr-cell{font-weight:500}
+
+/* HEALTH GAUGE */
+.health-bar-wrap{display:flex;align-items:center;gap:10px}
+.health-bar{flex:1;height:10px;background:var(--ghost);border-radius:5px;overflow:hidden}
+.health-fill{height:100%;border-radius:5px;transition:width 1s ease}
+.health-score{font-size:22px;font-weight:700;font-family:var(--M)}
+
+/* METRICS MINI */
+.pb-metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:1rem}
+.pm{background:#fff;border:.5px solid var(--bd);border-radius:8px;padding:11px 14px}
+.pm-l{font-size:10px;font-family:var(--M);text-transform:uppercase;letter-spacing:.5px;color:var(--mid)}.pm-v{font-size:19px;font-weight:600;font-family:var(--M);margin-top:3px}.pm-s{font-size:10px;color:var(--mid);font-family:var(--M);margin-top:1px}
+</style>
+<div class="pb-wrap">
+  <div class="pb-hdr">
+    <div class="cert-kicker" style="position:relative;z-index:1">Portfolio Builder · Plan Pro</div>
+    <div class="cert-hdr-h" style="position:relative;z-index:1">Construye tu portfolio</div>
+    <div class="cert-hdr-s" style="position:relative;z-index:1">Analiza correlación, riesgo combinado y equity conjunta de tus estrategias seleccionadas</div>
+  </div>
+
+  <div class="pb-layout">
+    <!-- PANEL IZQUIERDO -->
+    <div>
+      <div class="pb-panel">
+        <div class="pbp-hd"><div class="pbp-t">Estrategias seleccionadas</div></div>
+        <div class="pbp-body">
+          <ul class="pb-strat-list" id="pb-list">
+            <li class="pbsl-item">
+              <div class="pbsl-ico ico-nq">NQ</div>
+              <div><div class="pbsl-name">Nasdaq Momentum v3</div><div class="pbsl-code">MT5 · Score 84 · PF 2.34</div></div>
+              <span class="pbsl-pct" id="p-pct-0">40%</span>
+              <button class="pbsl-rm" onclick="removeStrat(0)">×</button>
+            </li>
+            <li class="pbsl-item">
+              <div class="pbsl-ico ico-fx">FX</div>
+              <div><div class="pbsl-name">EURUSD Mean Rev.</div><div class="pbsl-code">MT5 · Score 76 · PF 1.92</div></div>
+              <span class="pbsl-pct" id="p-pct-1">35%</span>
+              <button class="pbsl-rm" onclick="removeStrat(1)">×</button>
+            </li>
+            <li class="pbsl-item">
+              <div class="pbsl-ico ico-au">AU</div>
+              <div><div class="pbsl-name">Gold Breakout System</div><div class="pbsl-code">Python · Score 91 · PF 2.71</div></div>
+              <span class="pbsl-pct" id="p-pct-2">25%</span>
+              <button class="pbsl-rm" onclick="removeStrat(2)">×</button>
+            </li>
+          </ul>
+
+          <button class="pb-btn-add" onclick="gv('marketplace')">+ Añadir estrategia del marketplace</button>
+
+          <div class="section-label" style="margin-top:.5rem;margin-bottom:.75rem">Distribución de capital</div>
+          <div class="total-pct-bar">
+            <span class="tpb-label">Total asignado</span>
+            <span class="tpb-val ok" id="total-pct">100%</span>
+          </div>
+          <div class="slider-section" id="slider-section">
+            <div class="slider-row">
+              <div class="sr-top"><span class="sr-name">Nasdaq Momentum v3</span><span class="sr-pct" id="sr0">40%</span></div>
+              <input type="range" class="pb-slider" min="0" max="100" value="40" oninput="updateSlider(0,this.value)">
+            </div>
+            <div class="slider-row">
+              <div class="sr-top"><span class="sr-name">EURUSD Mean Rev.</span><span class="sr-pct" id="sr1">35%</span></div>
+              <input type="range" class="pb-slider blue" min="0" max="100" value="35" oninput="updateSlider(1,this.value)">
+            </div>
+            <div class="slider-row">
+              <div class="sr-top"><span class="sr-name">Gold Breakout</span><span class="sr-pct" id="sr2">25%</span></div>
+              <input type="range" class="pb-slider green" min="0" max="100" value="25" oninput="updateSlider(2,this.value)">
+            </div>
+          </div>
+          <button class="pb-btn-analyze" onclick="runAnalysis()">Analizar portfolio →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- PANEL DERECHO -->
+    <div id="pb-results">
+      <!-- HEALTH -->
+      <div class="section-label" style="margin-top:0">Salud del portfolio</div>
+      <div style="background:#fff;border:.5px solid var(--bd);border-radius:10px;padding:14px 18px;margin-bottom:1rem">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem">
+          <div>
+            <div style="font-size:10px;font-family:var(--M);text-transform:uppercase;letter-spacing:.8px;color:var(--mid);margin-bottom:4px">Score de salud</div>
+            <div class="health-bar-wrap">
+              <div class="health-bar"><div class="health-fill" id="health-fill" style="width:78%;background:var(--gain)"></div></div>
+              <div class="health-score gain" id="health-score">78</div>
+              <div style="font-size:11px;color:var(--mid);font-family:var(--M)">/100</div>
+            </div>
+          </div>
+          <div style="text-align:right">
+            <div style="font-size:10px;font-family:var(--M);text-transform:uppercase;letter-spacing:.8px;color:var(--mid)">Diagnóstico</div>
+            <div style="font-size:13px;font-weight:600;color:var(--gain);margin-top:2px" id="health-diag">Portfolio bien diversificado</div>
+          </div>
+        </div>
+        <div style="background:var(--gain2);border:.5px solid rgba(26,122,74,.2);border-radius:6px;padding:8px 12px;font-size:11px;color:var(--mid)" id="health-msg">
+          ✓ Baja correlación entre estrategias · ✓ 3 mercados distintos · ⚠ Considerar añadir una estrategia crypto para mayor diversificación
+        </div>
+      </div>
+
+      <!-- METRICS -->
+      <div class="section-label">Métricas combinadas del portfolio</div>
+      <div class="pb-metrics">
+        <div class="pm"><div class="pm-l">Retorno esperado</div><div class="pm-v gain" id="pb-ret">+31.4%</div><div class="pm-s">Anual ponderado</div></div>
+        <div class="pm"><div class="pm-l">Sharpe combinado</div><div class="pm-v gold" id="pb-sr">1.68</div><div class="pm-s">Ajustado al riesgo</div></div>
+        <div class="pm"><div class="pm-l">Max Drawdown</div><div class="pm-v" id="pb-dd">-9.8%</div><div class="pm-s">Escenario real combinado</div></div>
+        <div class="pm"><div class="pm-l">Profit Factor</div><div class="pm-v gain" id="pb-pf">2.21</div><div class="pm-s">Promedio ponderado</div></div>
+      </div>
+
+      <!-- EQUITY COMBINADA -->
+      <div class="section-label">Equity combinada del portfolio</div>
+      <div style="background:#fff;border:.5px solid var(--bd);border-radius:10px;padding:14px;margin-bottom:1rem">
+        <div style="font-size:10px;font-family:var(--M);text-transform:uppercase;letter-spacing:.8px;color:var(--mid);margin-bottom:10px">Simulación con pesos actuales · 18 meses</div>
+        <div style="position:relative;height:220px"><canvas id="pb-eq-chart"></canvas></div>
+      </div>
+
+      <!-- DRAWDOWN -->
+      <div class="section-label">Drawdown combinado</div>
+      <div style="background:#fff;border:.5px solid var(--bd);border-radius:10px;padding:14px;margin-bottom:1rem">
+        <div style="font-size:10px;font-family:var(--M);text-transform:uppercase;letter-spacing:.8px;color:var(--mid);margin-bottom:10px">Drawdown mensual portfolio · % desde pico</div>
+        <div style="position:relative;height:130px"><canvas id="pb-dd-chart"></canvas></div>
+      </div>
+
+      <!-- CORRELACIÓN -->
+      <div class="section-label">Matriz de correlación de Pearson</div>
+      <div style="background:#fff;border:.5px solid var(--bd);border-radius:10px;padding:14px;margin-bottom:1rem;overflow-x:auto">
+        <div style="font-size:10px;font-family:var(--M);text-transform:uppercase;letter-spacing:.8px;color:var(--mid);margin-bottom:10px">Correlación entre retornos mensuales · [-1 a +1] · Meta: &lt;0.30</div>
+        <table class="corr-matrix" id="corr-table">
+          <tr><th></th><th>NQ Mom.</th><th>EURUSD</th><th>Gold BK</th></tr>
+          <tr><th>NQ Mom.</th><td class="corr-cell" style="background:#1A7A4A;color:#fff">1.00</td><td class="corr-cell" id="c01"></td><td class="corr-cell" id="c02"></td></tr>
+          <tr><th>EURUSD</th><td class="corr-cell" id="c10"></td><td class="corr-cell" style="background:#1A7A4A;color:#fff">1.00</td><td class="corr-cell" id="c12"></td></tr>
+          <tr><th>Gold BK</th><td class="corr-cell" id="c20"></td><td class="corr-cell" id="c21"></td><td class="corr-cell" style="background:#1A7A4A;color:#fff">1.00</td></tr>
+        </table>
+        <div style="display:flex;align-items:center;gap:16px;margin-top:10px;flex-wrap:wrap">
+          <div style="display:flex;align-items:center;gap:6px"><div style="width:12px;height:12px;background:#1A7A4A;border-radius:2px"></div><span style="font-size:10px;font-family:var(--M);color:var(--mid)">Correlación baja (&lt;0.30) ✓ Bueno</span></div>
+          <div style="display:flex;align-items:center;gap:6px"><div style="width:12px;height:12px;background:var(--warn);border-radius:2px"></div><span style="font-size:10px;font-family:var(--M);color:var(--mid)">Correlación media (0.30–0.70)</span></div>
+          <div style="display:flex;align-items:center;gap:6px"><div style="width:12px;height:12px;background:var(--loss);border-radius:2px"></div><span style="font-size:10px;font-family:var(--M);color:var(--mid)">Alta correlación (&gt;0.70) ⚠ Riesgo concentrado</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ════════════════════════════════════════
+     ANALYTICS (CREATOR DASHBOARD)
+════════════════════════════════════════ -->
+<div id="view-analytics" class="view">
+  <div class="analytics-wrap">
+    <div class="analytics-hdr">
+      <div class="ah-deco"></div>
+      <div class="ah-label">Dashboard de creador · Privado · Solo visible para ti</div>
+      <div class="ah-h">Mi revenue</div>
+      <div class="ah-s">TradingPro_MX · Plan Creator · Miembro desde Ene 2024 · 3 estrategias publicadas</div>
+    </div>
+    <div class="an-layout">
+      <div>
+        <div class="metric-row">
+          <div class="am"><div class="am-l">Revenue total 2025</div><div class="am-v gain">$18,640</div><div class="am-s">Acumulado anual</div></div>
+          <div class="am"><div class="am-l">Mes actual</div><div class="am-v gold">$3,120</div><div class="am-s">+22% vs mes anterior</div></div>
+          <div class="am"><div class="am-l">Ventas totales</div><div class="am-v">142</div><div class="am-s">En 3 estrategias</div></div>
+          <div class="am"><div class="am-l">Rating promedio</div><div class="am-v gold">4.9 ★</div><div class="am-s">De compradores reales</div></div>
+        </div>
+        <div class="section-label" style="margin-top:0">Revenue mensual · Últimos 12 meses</div>
+        <div class="chart-box" style="margin-bottom:1rem"><div style="position:relative;height:200px"><canvas id="rev-chart"></canvas></div></div>
+        <div class="section-label">Mis estrategias publicadas</div>
+        <div class="chart-box" style="padding:0;overflow:hidden;margin-bottom:1rem">
+          <table class="strat-table">
+            <thead><tr><th>Estrategia</th><th>Nivel</th><th>Ventas</th><th>Revenue</th><th>Rating</th><th>Estado</th></tr></thead>
+            <tbody>
+              <tr><td><div style="font-weight:600">Nasdaq Momentum Alpha v3</div><div style="font-size:10px;color:var(--mid)">MT5 · Score 84</div></td><td style="color:var(--gold)">★★★★</td><td>142</td><td class="gain">$14,180</td><td>4.9 ★</td><td><span style="background:var(--gain2);color:var(--gain);padding:2px 8px;border-radius:3px;font-size:10px">ACTIVA</span></td></tr>
+              <tr><td><div style="font-weight:600">Nasdaq Scalper Pro v1</div><div style="font-size:10px;color:var(--mid)">MT5 · Score 71</div></td><td style="color:var(--gold)">★★★</td><td>34</td><td class="gain">$3,060</td><td>4.7 ★</td><td><span style="background:var(--gain2);color:var(--gain);padding:2px 8px;border-radius:3px;font-size:10px">ACTIVA</span></td></tr>
+              <tr><td><div style="font-weight:600">NQ Mean Reversion v2</div><div style="font-size:10px;color:var(--mid)">Python · Score 55</div></td><td style="color:var(--gold)">★★</td><td>8</td><td class="gain">$1,400</td><td>4.4 ★</td><td><span style="background:var(--warn2);color:var(--warn);padding:2px 8px;border-radius:3px;font-size:10px">EN REVISIÓN</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="section-label">Ventas por región · Top mercados</div>
+        <div class="chart-box"><div style="position:relative;height:180px"><canvas id="region-chart"></canvas></div></div>
+      </div>
+      <!-- BALANCE CARD -->
+      <div>
+        <div class="balance-card">
+          <div class="bc-head">
+            <div class="bc-t">Balance disponible</div>
+            <div class="bc-val">$2,184</div>
+            <div class="bc-sub">Disponible · USD</div>
+          </div>
+          <div class="bc-body">
+            <div class="bc-row"><span class="bc-l">Pendiente de liquidar</span><span class="bc-v">$936</span></div>
+            <div class="bc-row"><span class="bc-l">Comisión plataforma (20%)</span><span class="bc-v loss">–$780</span></div>
+            <div class="bc-row"><span class="bc-l">Retirado este año</span><span class="bc-v">$15,720</span></div>
+            <div class="bc-row"><span class="bc-l">Próximo pago</span><span class="bc-v">15 Abr 2026</span></div>
+            <button class="withdraw-btn" onclick="alert('Retiro solicitado. Recibirás un email de confirmación.')">Solicitar retiro →</button>
+            <div style="margin-top:14px">
+              <div class="bc-t" style="font-size:10px;margin-bottom:8px">Últimos retiros</div>
+              <div class="ph-row"><span>15 Mar 2026</span><span class="gain">+$2,840</span></div>
+              <div class="ph-row"><span>15 Feb 2026</span><span class="gain">+$3,120</span></div>
+              <div class="ph-row"><span>15 Ene 2026</span><span class="gain">+$2,590</span></div>
+              <div class="ph-row"><span>15 Dic 2025</span><span class="gain">+$3,440</span></div>
+            </div>
+            <div class="proj-box">
+              <div class="pj-l">Proyección anual (tendencia 3M)</div>
+              <div class="pj-v">$37,440</div>
+              <div class="pj-s">Basado en crecimiento actual</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     MODAL REGISTRO
+════════════════════════════════════════ -->
+<div class="modal-ov" id="modal-ov" onclick="closeModal(event)">
+  <div class="modal-box">
+    <div class="modal-hd">
+      <div class="modal-title">Crear cuenta gratis</div>
+      <div class="modal-sub">Sin tarjeta de crédito · Acceso inmediato al catálogo</div>
+    </div>
+    <button class="modal-close" onclick="document.getElementById('modal-ov').classList.remove('open')">×</button>
+    <div class="modal-bd">
+      <div class="role-pills">
+        <div class="rpill" id="pill-buy" onclick="selectRole('buyer')">
+          <div class="rpill-ico">🛒</div>
+          <div class="rpill-t">Quiero comprar</div>
+          <div class="rpill-d">Accedo al marketplace y compro estrategias verificadas</div>
+          <div class="rpill-benefit rpb-buy">Plan Free → Pro $49/mes</div>
+        </div>
+        <div class="rpill" id="pill-sell" onclick="selectRole('seller')">
+          <div class="rpill-ico">⭐</div>
+          <div class="rpill-t">Quiero vender</div>
+          <div class="rpill-d">Publico y monetizo mis propias estrategias de trading</div>
+          <div class="rpill-benefit rpb-sell">Plan Creator $29/mes</div>
+        </div>
+      </div>
+      <div class="f-grid2">
+        <div><label class="flbl">Nombre</label><input class="finput" type="text" placeholder="Carlos"></div>
+        <div><label class="flbl">Apellido</label><input class="finput" type="text" placeholder="Mendoza"></div>
+      </div>
+      <label class="flbl">Email</label>
+      <input class="finput" type="email" placeholder="carlos@email.com">
+      <label class="flbl">Contraseña</label>
+      <input class="finput" type="password" placeholder="Mínimo 8 caracteres">
+      <div id="seller-xtra" style="display:none">
+        <label class="flbl">Plataforma principal</label>
+        <select class="finput"><option>MetaTrader 5</option><option>Python / Pandas</option><option>NinjaTrader 8</option><option>TradingView</option></select>
+      </div>
+      <button class="reg-btn" id="reg-btn" onclick="register()">Crear cuenta como Comprador →</button>
+      <div class="modal-fine">Al registrarte aceptas los Términos de uso y la Política de privacidad de AlgoVault</div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── DATA ──
+const STRATEGIES = [
+  {id:1,code:'NQ',cls:'ico-nq',mkt:'indices',tags:['MT5','1H/4H'],badgeClass:'badge-h',badgeText:'TOP RATED',title:'Nasdaq Momentum Alpha v3',author:'TradingPro_MX',ai:'TP',sold:142,rating:'4.9',strats:5,stars:4,pf:2.34,sr:1.87,dd:-12.4,wr:61,trades:842,months:18,price:497,score:84,certLvl:4,annRet:38.2,locked:false,eq:[100,108,115,112,121,118,130,127,138,145,142,158,165,160,172,181,178,192],mo:[3.1,-1.2,4.2,2.8,-0.9,3.8,2.1,4.5,-1.8,3.3,2.7,3.9,-1.1,4.1,2.3,3.7,-0.7,3.5],scarcity:'⏳ Solo 8 licencias disponibles este mes'},
+  {id:2,code:'FX',cls:'ico-fx',mkt:'forex',tags:['MT5','4H'],badgeClass:'badge-v',badgeText:'VERIFICADO',title:'EURUSD Mean Reversion Pro',author:'AlgoTrader_ES',ai:'AE',sold:89,rating:'4.7',strats:3,stars:3,pf:1.92,sr:1.42,dd:-8.1,wr:58,trades:614,months:12,price:299,score:76,certLvl:3,locked:false,annRet:22.7,eq:[100,103,107,105,110,108,113,117,115,120,123,119,125,128,126,131,135,133],mo:[1.8,0.9,2.3,-0.6,1.9,1.1,2.7,-0.4,1.6,2.1,0.8,1.9,-0.3,2.2,1.4,1.8,0.7,2.0],scarcity:'✅ Garantía 14 días — sin riesgo'},
+  {id:3,code:'AU',cls:'ico-au',mkt:'commodities',tags:['Python','Daily'],badgeClass:'badge-v',badgeText:'VERIFICADO',title:'Gold Breakout System',author:'QuantGold_Pro',ai:'QG',sold:211,rating:'5.0',strats:7,stars:5,pf:2.71,sr:2.11,dd:-9.3,wr:55,trades:523,months:24,price:699,score:91,certLvl:5,locked:false,annRet:44.1,eq:[100,106,114,109,118,125,122,131,140,136,148,155,151,163,172,168,179,188],mo:[2.8,3.5,-1.1,4.2,2.1,3.8,-0.9,4.5,2.7,3.1,-0.8,4.0,2.3,3.6,-1.2,4.3,2.0,3.4],scarcity:'🔥 Más vendida del mes'},
+  {id:4,code:'SP',cls:'ico-sp',mkt:'indices',tags:['NinjaTrader','5m'],badgeClass:'badge-n',badgeText:'NUEVO',title:'S&P500 Scalper Institucional',author:'WallStQuant',ai:'WQ',sold:14,rating:'4.2',strats:2,stars:2,pf:1.65,sr:1.28,dd:-18.2,wr:52,trades:1240,months:3,price:199,score:58,certLvl:2,locked:false,annRet:18.5,eq:[100,102,105,103,107,104,109,112,110,115,113,118,116,121,119,124,122,127],mo:[1.2,0.7,1.8,-1.4,1.5,0.9,2.1,-1.8,1.3,1.9,-1.1,1.7,0.8,2.2,-1.3,1.6,0.6,1.4],scarcity:'✅ Garantía 14 días — sin riesgo'},
+  {id:5,code:'BT',cls:'ico-bt',mkt:'crypto',tags:['Python','4H'],badgeClass:'badge-v',badgeText:'VERIFICADO',title:'BTC Trend Follower AI',author:'CryptoQuant_MX',ai:'CQ',sold:67,rating:'4.5',strats:4,stars:3,pf:2.05,sr:1.61,dd:-22.5,wr:48,trades:381,months:9,price:349,score:69,certLvl:3,locked:false,annRet:52.3,eq:[100,108,117,109,120,132,125,140,152,143,160,148,165,178,170,183,175,190],mo:[5.2,-3.1,7.8,-2.4,6.1,-1.8,8.3,-3.5,5.9,7.2,-2.9,6.5,-1.4,7.8,-3.1,5.4,6.8,-2.2],scarcity:'⏳ 12 licencias restantes'},
+  {id:6,code:'FX',cls:'ico-fx',mkt:'forex',tags:['MT5','1H'],badgeClass:'badge-v',badgeText:'VERIFICADO',title:'GBPUSD Breakout Master',author:'LondonTrader_UK',ai:'LT',sold:103,rating:'4.8',strats:6,stars:4,pf:2.18,sr:1.74,dd:-11.2,wr:57,trades:729,months:15,price:449,score:80,certLvl:4,locked:false,annRet:31.8,eq:[100,105,111,108,115,113,120,118,125,122,130,128,135,133,140,138,145,143],mo:[2.2,1.4,2.9,-0.8,2.5,1.7,3.1,-1.1,2.4,2.8,-0.6,2.7,1.5,3.0,-0.9,2.6,1.3,2.8],scarcity:'✅ Garantía 14 días — sin riesgo'},
+  {id:7,code:'NQ',cls:'ico-nq',mkt:'indices',tags:['MT5','Daily'],badgeClass:'badge-p',badgeText:'INSTITUCIONAL',title:'QQQ Long-Short Alpha Inst.',author:'InstitQuant_NY',ai:'IQ',sold:6,rating:'4.9',strats:2,stars:5,pf:3.12,sr:2.45,dd:-7.1,wr:63,trades:284,months:28,price:1199,score:97,certLvl:5,locked:true,annRet:58.4,eq:[100,107,115,112,121,130,127,138,148,144,157,165,162,175,183,180,191,200],mo:[3.2,4.1,-0.8,5.2,3.1,4.8,-0.4,5.6,3.4,4.2,-0.6,5.0,3.3,4.5,-0.7,4.9,3.1,5.1],scarcity:'🔒 Solo 3 licencias institucionales disponibles'},
+  {id:8,code:'FX',cls:'ico-fx',mkt:'forex',tags:['Python','1H'],badgeClass:'badge-p',badgeText:'INSTITUCIONAL',title:'Multi-Currency Arb System',author:'QuantFX_Berlin',ai:'QB',sold:4,rating:'5.0',strats:3,stars:5,pf:2.89,sr:2.21,dd:-6.8,wr:61,trades:1847,months:22,price:899,score:94,certLvl:5,locked:true,annRet:42.1,eq:[100,104,109,107,113,118,115,121,127,124,130,135,133,139,144,141,147,152],mo:[2.1,2.8,-0.4,3.2,2.0,3.1,-0.2,3.4,2.2,2.9,-0.3,3.1,2.0,3.0,-0.3,2.8,2.1,3.2],scarcity:'🔒 Acceso institucional — verificación requerida'},
+];
+
+const miniCharts = {};
+let eqChart = null, distChart = null, revChart = null, regChart = null;
+let curRole = 'buyer';
+let curDetail = null;
+
+function stars(n, sz) {
+  sz = sz || 10;
+  return Array.from({length:5}, (_,i) => `<span class="${i<n?'star':'star off'}" style="font-size:${sz}px">★</span>`).join('');
+}
+
+function pfColor(v) { return v>=1.5?'gain':v>=1?'gold':'loss'; }
+function srColor(v) { return v>=1.5?'gain':v>=1?'gold':'loss'; }
+function ddColor(v) { return v>=-10?'gain':v>=-20?'gold':'loss'; }
+
+function renderCards(list) {
+  const grid = document.getElementById('card-grid');
+  grid.innerHTML = list.map(s => {
+    const locked = s.locked;
+    return `<div class="card" style="position:relative" onclick="${locked ? "openModal('buyer')" : `openDetail(${s.id})`}">
+      <div class="card-badge ${s.badgeClass}">${s.badgeText}</div>
+      <div class="card-top">
+        <div class="card-ico ${s.cls}">${s.code}</div>
+        <div>
+          <div class="card-name">${s.title}</div>
+          <div class="card-auth">${s.author}</div>
+          <div class="card-stars">${stars(s.stars)}</div>
+        </div>
+      </div>
+      <div class="mini-chart"><canvas id="mc-${s.id}"></canvas></div>
+      <div class="card-metrics">
+        <div class="cm"><div class="cml">PF</div><div class="cmv ${pfColor(s.pf)} ${locked?'':'gain'}">${locked?'—':s.pf}</div></div>
+        <div class="cm"><div class="cml">Sharpe</div><div class="cmv ${srColor(s.sr)}">${s.sr}</div></div>
+        <div class="cm"><div class="cml">DD</div><div class="cmv ${ddColor(s.dd)}">${s.dd}%</div></div>
+        <div class="cm"><div class="cml">Win%</div><div class="cmv gold">${s.wr}%</div></div>
+      </div>
+      <div class="card-foot">
+        <div class="card-price">$${s.price.toLocaleString()} <span>USD</span></div>
+        <div class="card-tags">
+          <div class="score-chip">Score ${s.score}</div>
+          ${s.tags.map(t=>`<span class="ctag">${t}</span>`).join('')}
+        </div>
+      </div>
+      ${locked ? `<div class="locked-overlay"><div class="lock-content"><div class="lock-icon">🔒</div><div class="lock-msg">Estrategia Nivel 5 · Solo Plan Pro</div><button class="lock-btn" onclick="event.stopPropagation();openModal('buyer')">Desbloquear →</button></div></div>` : ''}
+    </div>`;
+  }).join('');
+
+  setTimeout(() => {
+    list.forEach(s => {
+      const cv = document.getElementById('mc-'+s.id);
+      if (!cv || miniCharts[s.id]) return;
+      const col = s.stars>=4?'#C9A84C':s.stars>=3?'#1A7A4A':'#536091';
+      miniCharts[s.id] = new Chart(cv, {
+        type:'line',
+        data:{labels:s.eq.map((_,i)=>i),datasets:[{data:s.eq,borderColor:col,borderWidth:1.5,fill:true,backgroundColor:col==='#C9A84C'?'rgba(201,168,76,.07)':'rgba(26,122,74,.07)',tension:.4,pointRadius:0}]},
+        options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{display:false},y:{display:false}},animation:{duration:0}}
+      });
+    });
+  }, 80);
+}
+
+function fm(cat, el) {
+  document.querySelectorAll('#filter-tabs .ftab').forEach(t=>t.classList.remove('active'));
+  if (el) el.classList.add('active');
+  const map = {all:STRATEGIES,forex:STRATEGIES.filter(s=>s.mkt==='forex'),indices:STRATEGIES.filter(s=>s.mkt==='indices'),crypto:STRATEGIES.filter(s=>s.mkt==='crypto'),commodities:STRATEGIES.filter(s=>s.mkt==='commodities'),mt5:STRATEGIES.filter(s=>s.tags.includes('MT5')),python:STRATEGIES.filter(s=>s.tags.includes('Python'))};
+  renderCards(map[cat]||STRATEGIES);
+}
+
+function sortCards(by, el) {
+  document.querySelectorAll('.sort-btn').forEach(b=>b.classList.remove('active'));
+  if(el) el.classList.add('active');
+  const sorted = [...STRATEGIES].sort((a,b) => by==='score'?b.score-a.score:by==='sold'?b.sold-a.sold:by==='sr'?b.sr-a.sr:a.price-b.price);
+  renderCards(sorted);
+}
+
+function gv(v) {
+  document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.nl').forEach(x=>x.classList.remove('active'));
+  document.getElementById('view-'+v).classList.add('active');
+  const nl = document.getElementById('nl-'+v);
+  if(nl) nl.classList.add('active');
+  if(v==='marketplace') renderCards(STRATEGIES);
+  if(v==='analytics') setTimeout(renderAnalytics, 100);
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function openDetail(id) {
+  const s = STRATEGIES.find(x=>x.id===id);
+  if(!s) return;
+  curDetail = id;
+  gv('detail');
+  document.getElementById('nl-marketplace').classList.add('active');
+  const di = document.getElementById('d-ico'); di.className='d-ico '+s.cls; di.textContent=s.code;
+  document.getElementById('d-title').textContent = s.title;
+  const db = document.getElementById('d-badge'); db.className='card-badge '+s.badgeClass; db.textContent=s.badgeText;
+  document.getElementById('d-auth').textContent = 'por '+s.author;
+  document.getElementById('d-tags').innerHTML = s.tags.map(t=>`<span class="dtag">${t}</span>`).join('')+`<span class="dtag">${s.months}m live</span><span class="dtag">Score ${s.score}/100</span>`;
+  document.getElementById('d-metrics').innerHTML = `
+    <div class="metric-box"><div class="mb-l">Profit Factor</div><div class="mb-v ${pfColor(s.pf)}">${s.pf}</div><div class="mb-s">${s.pf>=1.5?'Excelente':'Aceptable'}</div></div>
+    <div class="metric-box"><div class="mb-l">Sharpe Ratio</div><div class="mb-v ${srColor(s.sr)}">${s.sr}</div><div class="mb-s">${s.sr>=1.5?'Institucional':'Aceptable'}</div></div>
+    <div class="metric-box"><div class="mb-l">Max Drawdown</div><div class="mb-v ${ddColor(s.dd)}">${s.dd}%</div><div class="mb-s">${s.dd>=-10?'Controlado':'Moderado'}</div></div>
+    <div class="metric-box"><div class="mb-l">Win Rate</div><div class="mb-v gold">${s.wr}%</div><div class="mb-s">${s.trades} trades</div></div>
+    <div class="metric-box"><div class="mb-l">Track Record</div><div class="mb-v info" style="color:var(--info)">${s.months}m live</div><div class="mb-s">Myfxbook verificado</div></div>
+    <div class="metric-box"><div class="mb-l">Score AlgoVault</div><div class="mb-v gold">${s.score}/100</div><div class="mb-s">Top ${Math.max(5,Math.round((100-s.score)/8)*4)}%</div></div>`;
+  document.getElementById('d-eqlbl').textContent = `Equity curve · ${s.months}m live · Cuenta real`;
+  if(eqChart){eqChart.destroy();eqChart=null;}
+  if(distChart){distChart.destroy();distChart=null;}
+  const col = s.stars>=4?'#C9A84C':s.stars>=3?'#1A7A4A':'#536091';
+  const fill = col==='#C9A84C'?'rgba(201,168,76,.08)':'rgba(26,122,74,.08)';
+  const mos = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic','Ene','Feb','Mar','Abr','May','Jun'];
+  eqChart = new Chart(document.getElementById('d-eq'),{type:'line',data:{labels:mos.slice(0,s.eq.length),datasets:[{data:s.eq.map(v=>Math.round(v*100)),borderColor:col,borderWidth:2,fill:true,backgroundColor:fill,tension:.4,pointRadius:0,pointHoverRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#6B7694',font:{size:9,family:'IBM Plex Mono'}},grid:{color:'rgba(61,74,107,.08)'}},y:{ticks:{color:'#6B7694',font:{size:9,family:'IBM Plex Mono'},callback:v=>'$'+v.toLocaleString()},grid:{color:'rgba(61,74,107,.08)'}}}}});
+  distChart = new Chart(document.getElementById('d-dist'),{type:'bar',data:{labels:mos.slice(0,s.mo.length),datasets:[{data:s.mo,backgroundColor:s.mo.map(v=>v>=0?'rgba(26,122,74,.7)':'rgba(192,57,43,.7)'),borderRadius:3,borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#6B7694',font:{size:9,family:'IBM Plex Mono'}},grid:{display:false}},y:{ticks:{color:'#6B7694',font:{size:9,family:'IBM Plex Mono'},callback:v=>v+'%'},grid:{color:'rgba(61,74,107,.08)'}}}}});
+  document.getElementById('d-price').innerHTML = `$${s.price.toLocaleString()} <span>USD</span>`;
+  document.getElementById('d-scarcity').textContent = s.scarcity;
+  document.getElementById('d-sav').textContent = s.ai;
+  document.getElementById('d-sname').textContent = s.author;
+  document.getElementById('d-ssold').textContent = s.sold;
+  document.getElementById('d-srat').textContent = s.rating+' ★';
+  document.getElementById('d-sst').textContent = s.strats;
+  const lvls = [{n:1,name:'Backtest',req:'PF, Sharpe, DD, trades, histórico'},{n:2,name:'Robustez',req:'Monte Carlo · Walk Forward · OOS'},{n:3,name:'Cuenta real',req:'Myfxbook / Darwinex · 3m+'},{n:4,name:'Track record',req:'12m+ live · Consistencia >70%'},{n:5,name:'Institucional',req:'Sharpe >2.0 · DD <8% · 24m+'}];
+  document.getElementById('d-cert').innerHTML = lvls.map(l=>{
+    const done=l.n<s.certLvl,cur=l.n===s.certLvl;
+    return`<div class="cl-row ${done?'done':cur?'cur':''}">
+      <div class="cl-stars">${stars(l.n,8)}</div>
+      <div class="cl-info"><div class="cl-name">Nivel ${l.n} · ${l.name}</div><div class="cl-req">${l.req}</div></div>
+      <span class="cl-status ${done?'cls-done':cur?'cls-cur':'cls-pend'}">${done?'✓ OK':cur?'ACTUAL':'PEND.'}</span>
+    </div>`;
+  }).join('');
+}
+
+// ANALYTICS
+function renderAnalytics() {
+  if(revChart){revChart.destroy();revChart=null;}
+  if(regChart){regChart.destroy();regChart=null;}
+  const mos = ['May','Jun','Jul','Ago','Sep','Oct','Nov','Dic','Ene','Feb','Mar','Abr'];
+  const rc = document.getElementById('rev-chart');
+  if(rc) revChart = new Chart(rc,{type:'bar',data:{labels:mos,datasets:[{label:'Revenue',data:[980,1240,1580,1320,1890,2210,1980,2650,2840,3120,2590,3120],backgroundColor:'rgba(201,168,76,.6)',borderColor:'#C9A84C',borderWidth:1,borderRadius:5}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#6B7694',font:{size:10,family:'IBM Plex Mono'}},grid:{display:false}},y:{ticks:{color:'#6B7694',font:{size:10,family:'IBM Plex Mono'},callback:v=>'$'+v.toLocaleString()},grid:{color:'rgba(61,74,107,.08)'}}}}});
+  const rg = document.getElementById('region-chart');
+  if(rg) regChart = new Chart(rg,{type:'bar',data:{labels:['México','España','Colombia','USA','Argentina','Chile','Perú'],datasets:[{data:[28,22,18,14,8,6,4],backgroundColor:['#C9A84C','rgba(201,168,76,.75)','rgba(201,168,76,.58)','rgba(201,168,76,.44)','rgba(201,168,76,.32)','rgba(201,168,76,.22)','rgba(201,168,76,.15)'],borderRadius:4,borderWidth:0}]},options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#6B7694',font:{size:10,family:'IBM Plex Mono'},callback:v=>v+'%'},grid:{color:'rgba(61,74,107,.08)'}},y:{ticks:{color:'#6B7694',font:{size:10,family:'IBM Plex Mono'}},grid:{display:false}}}}});
+}
+
+// MODAL
+function openModal(role) {
+  document.getElementById('modal-ov').classList.add('open');
+  selectRole(role);
+}
+function closeModal(e) {
+  if(e.target===document.getElementById('modal-ov')) document.getElementById('modal-ov').classList.remove('open');
+}
+function selectRole(role) {
+  curRole = role;
+  document.getElementById('pill-buy').className = 'rpill'+(role==='buyer'?' selected-buy':'');
+  document.getElementById('pill-sell').className = 'rpill'+(role==='seller'?' selected-sell':'');
+  document.getElementById('seller-xtra').style.display = role==='seller'?'block':'none';
+  const btn = document.getElementById('reg-btn');
+  btn.textContent = role==='buyer'?'Crear cuenta como Comprador →':'Crear cuenta como Creador →';
+  btn.className = 'reg-btn'+(role==='seller'?' sell-mode':'');
+}
+function register() {
+  document.getElementById('modal-ov').classList.remove('open');
+  if(curRole==='seller') gv('analytics');
+  else gv('marketplace');
+}
+
+// HOW IT WORKS TOGGLE
+function switchHow(mode) {
+  document.getElementById('how-buy').classList.toggle('active', mode==='buy');
+  document.getElementById('how-sell').classList.toggle('active', mode==='sell');
+  const steps = document.getElementById('hiw-steps');
+  if(mode==='buy'){
+    steps.innerHTML=`<div class="step"><div class="step-n">Paso 01</div><div class="step-icon">🔍</div><div class="step-h">Explora sin registro</div><div class="step-p">Catálogo completo visible gratis. Filtra por mercado, Sharpe, drawdown, nivel de certificación y plataforma.</div></div><div class="step"><div class="step-n">Paso 02</div><div class="step-icon">📊</div><div class="step-h">Analiza con datos reales</div><div class="step-p">Equity curve verificada, retornos mensuales, track record en cuenta real con Myfxbook o Darwinex.</div></div><div class="step"><div class="step-n">Paso 03</div><div class="step-icon">⚡</div><div class="step-h">Prueba gratis 14 días</div><div class="step-p">Antes de comprar, prueba en demo o cuenta real durante 14 días. Cero riesgo, decisión informada.</div></div><div class="step"><div class="step-n">Paso 04</div><div class="step-icon">🚀</div><div class="step-h">Integra y opera</div><div class="step-p">Descarga directo a MT5, Python o NinjaTrader. Soporte directo con el creador incluido en la compra.</div></div>`;
+  } else {
+    steps.innerHTML=`<div class="step"><div class="step-n">Paso 01</div><div class="step-icon">💻</div><div class="step-h">Sube tu estrategia</div><div class="step-p">Código, parámetros y backtest. Soportamos MT5, Python, NinjaTrader y TradingView en formato estándar.</div></div><div class="step"><div class="step-n">Paso 02</div><div class="step-icon">🏅</div><div class="step-h">Certifícala</div><div class="step-p">Nuestro sistema verifica con datos reales. A mayor nivel de certificación, mayor precio justificado.</div></div><div class="step"><div class="step-n">Paso 03</div><div class="step-icon">🌍</div><div class="step-h">Aparece en el marketplace</div><div class="step-p">Tu estrategia se muestra ante 12,400+ traders en 94 países. Tú fijas el precio. Nosotros la distribución.</div></div><div class="step"><div class="step-n">Paso 04</div><div class="step-icon">💰</div><div class="step-h">Cobra el 70–80%</div><div class="step-p">Retiro mensual automático directo a tu cuenta. Sin sorpresas ni comisiones ocultas.</div></div>`;
+  }
+}
+
+// INIT
+renderCards(STRATEGIES);
+
+// ══════════════════════════════════
+// CERTIFICAR
+// ══════════════════════════════════
+let certStep = 1;
+const robChecked = { mc:false, wf:false, oos:false, sa:false };
+
+function goStep(n) {
+  certStep = n;
+  for(let i=1;i<=5;i++){
+    document.getElementById('vs-'+i).classList.toggle('active', i===n);
+    const dot = document.getElementById('sdot-'+i);
+    if(dot){
+      dot.className = 'step-dot'+(i<n?' done':i===n?' active':'');
+    }
+  }
+  document.getElementById('cert-progress').style.width = (n/5*100)+'%';
+  if(n===5) computeScore();
+}
+
+function toggleRob(el, key) {
+  robChecked[key] = !robChecked[key];
+  el.classList.toggle('checked', robChecked[key]);
+  const chk = document.getElementById('chk-'+key);
+  if(chk) chk.textContent = robChecked[key] ? '✓' : '';
+  liveScore();
+}
+
+function calcHint(field, val) {
+  const v = parseFloat(val);
+  const hints = {
+    pf:  { el:'h-pf',  ok: v>=1.5, warn: v>=1.3, msg: v>=1.5?'Excelente — Nivel 3+ alcanzable':v>=1.3?'Aprobado — cumple Nivel 1':'⚠ Mínimo requerido: 1.3' },
+    sr:  { el:'h-sr',  ok: v>=1.5, warn: v>=0.8, msg: v>=1.5?'Institucional — Nivel 5 posible':v>=0.8?'Aprobado — cumple Nivel 1':'⚠ Mínimo requerido: 0.8' },
+    dd:  { el:'h-dd',  ok: v<=10,  warn: v<=30,  msg: v<=10?'Controlado — muy bueno':v<=30?'Aprobado — cumple Nivel 1':'⚠ Máximo permitido: 30%' },
+    tr:  { el:'h-tr',  ok: v>=500, warn: v>=200, msg: v>=500?'Muestra sólida':v>=200?'Mínimo cumplido':'⚠ Mínimo requerido: 200 trades' },
+    yrs: { el:'h-yrs', ok: v>=5,   warn: v>=3,   msg: v>=5?'Histórico extenso — muy bueno':v>=3?'Mínimo cumplido':'⚠ Mínimo requerido: 3 años' },
+  };
+  const h = hints[field];
+  if(!h) return;
+  const el = document.getElementById(h.el);
+  if(!el) return;
+  el.textContent = isNaN(v) ? '' : h.msg;
+  el.className = 'metric-hint'+(h.ok?' ok':h.warn?'':' bad');
+  liveScore();
+}
+
+function checkLive(src, val) {
+  const badge = document.getElementById('badge-'+src);
+  if(!badge) return;
+  if(val.length > 10) {
+    badge.style.display = 'block';
+    badge.className = 'live-badge lb-ok';
+    badge.textContent = '✓ DETECTADO';
+  } else {
+    badge.style.display = 'none';
+  }
+  liveScore();
+}
+
+function liveScore() { /* recalculates silently */ }
+
+function computeScore() {
+  const pf   = parseFloat(document.getElementById('v-pf')?.value) || 0;
+  const sr   = parseFloat(document.getElementById('v-sr')?.value) || 0;
+  const dd   = parseFloat(document.getElementById('v-dd')?.value) || 99;
+  const tr   = parseFloat(document.getElementById('v-tr')?.value) || 0;
+  const yrs  = parseFloat(document.getElementById('v-yrs')?.value) || 0;
+  const cons = parseFloat(document.getElementById('v-cons')?.value) || 0;
+  const liveM= parseFloat(document.getElementById('v-livemons')?.value) || 0;
+  const mfx  = (document.getElementById('v-mfx')?.value || '').length > 10;
+  const robCount = Object.values(robChecked).filter(Boolean).length;
+
+  // SCORE COMPONENTS (max 100)
+  let bt  = 0; // backtest basics — max 30
+  if(pf >= 1.3) bt += 8;  if(pf >= 1.7) bt += 5;  if(pf >= 2.2) bt += 4;
+  if(sr >= 0.8) bt += 5;  if(sr >= 1.5) bt += 4;   if(sr >= 2.0) bt += 3;
+  if(dd <= 30)  bt += 5;  if(dd <= 15)  bt += 3;   if(dd <= 8)   bt += 3;
+  if(tr >= 200) bt += 5;  if(yrs >= 3)  bt += 5;
+
+  let rob = Math.min(20, robCount * 5); // robustez — max 20
+
+  let live = 0; // cuenta real — max 25
+  if(mfx) live += 15;
+  if(liveM >= 3)  live += 5;
+  if(liveM >= 12) live += 5;
+
+  let trk = 0; // track record — max 15
+  if(liveM >= 12) trk += 8;
+  if(liveM >= 24) trk += 7;
+
+  let consScore = 0; // consistencia — max 10
+  if(cons >= 60) consScore += 5;
+  if(cons >= 75) consScore += 5;
+
+  const total = Math.min(100, Math.round(bt + rob + live + trk + consScore));
+
+  // Animate score arc
+  const arc = document.getElementById('score-arc');
+  const num = document.getElementById('score-num');
+  if(!arc || !num) return;
+  const circum = 414.7;
+  arc.style.strokeDashoffset = circum - (circum * total / 100);
+  let c = 0;
+  const interval = setInterval(() => {
+    c = Math.min(c+2, total);
+    num.textContent = c;
+    if(c >= total) clearInterval(interval);
+  }, 20);
+
+  // BARS
+  const bars = [{id:'bt',v:bt,max:30},{id:'rob',v:rob,max:20},{id:'live',v:live,max:25},{id:'tr',v:trk,max:15},{id:'cons',v:consScore,max:10}];
+  bars.forEach(b=>{
+    const bar = document.getElementById('bar-'+b.id);
+    const val = document.getElementById('val-'+(b.id==='tr'?'tr2':b.id));
+    if(bar) bar.style.width = Math.round(b.v/b.max*100)+'%';
+    if(val) val.textContent = b.v;
+  });
+  const advEl = document.getElementById('val-adv');
+  if(advEl) advEl.textContent = 0; // adv always 0 until API
+  const barAdv = document.getElementById('bar-adv');
+  if(barAdv) barAdv.style.width = '0%';
+
+  // CERT LEVEL
+  const certLvl = liveM>=24&&total>=88?5:liveM>=12&&total>=70?4:mfx&&total>=55?3:rob>=10&&total>=40?2:1;
+  const lvlNames = ['','Backtest','Robustez','Cuenta real','Track record','Institucional'];
+  const lvlDescs = ['','Puedes publicar en el marketplace con datos de backtest','Estrategia robustez comprobada — precio premium justificado','Track record real verificado — top 30% del marketplace','Historial de 12+ meses — acceso a compradores Pro','Nivel institucional — las 8 licencias más caras del marketplace'];
+  const starsStr = '★'.repeat(certLvl)+'☆'.repeat(5-certLvl);
+  const el1 = document.getElementById('crl-stars'), el2=document.getElementById('crl-h'), el3=document.getElementById('crl-s');
+  if(el1) el1.textContent = starsStr;
+  if(el2) el2.textContent = `Nivel ${certLvl} · ${lvlNames[certLvl]}`;
+  if(el3) el3.textContent = lvlDescs[certLvl];
+
+  // MISSING
+  const missing = [];
+  if(pf < 1.3) missing.push('Profit Factor mínimo 1.3 (actual: '+pf+')');
+  if(sr < 0.8) missing.push('Sharpe Ratio mínimo 0.8 (actual: '+sr+')');
+  if(dd > 30)  missing.push('Max Drawdown debe ser menor a 30%');
+  if(tr < 200) missing.push('Mínimo 200 trades en el backtest');
+  if(yrs < 3)  missing.push('Mínimo 3 años de histórico');
+  if(!mfx && liveM < 3) missing.push('Conectar Myfxbook o Darwinex para Nivel 3+');
+  const ml = document.getElementById('missing-list');
+  if(ml) ml.innerHTML = missing.length ? `<div style="font-size:10px;font-family:var(--M);text-transform:uppercase;letter-spacing:.8px;color:var(--loss);margin-bottom:6px;margin-top:10px">Requisitos faltantes</div>`+missing.map(m=>`<div class="ml-item"><span class="ml-x">✗</span>${m}</div>`).join('') : `<div style="margin-top:10px;padding:8px 12px;background:var(--gain2);border:.5px solid rgba(26,122,74,.25);border-radius:6px;font-size:11px;color:var(--gain);font-family:var(--M)">✓ Todos los requisitos mínimos cumplidos — listo para publicar</div>`;
+}
+
+// ══════════════════════════════════
+// PORTFOLIO BUILDER
+// ══════════════════════════════════
+const pbAllocs = [40, 35, 25];
+let pbEqChart = null, pbDdChart = null;
+
+function updateSlider(idx, val) {
+  pbAllocs[idx] = parseInt(val);
+  const total = pbAllocs.reduce((a,b)=>a+b,0);
+  const pctEl = document.getElementById('total-pct');
+  const srEl  = document.getElementById('sr'+idx);
+  const pEl   = document.getElementById('p-pct-'+idx);
+  if(srEl) srEl.textContent = val+'%';
+  if(pEl)  pEl.textContent  = val+'%';
+  if(pctEl) {
+    pctEl.textContent = total+'%';
+    pctEl.className = 'tpb-val '+(total===100?'ok':total>100?'over':'warn');
+  }
+  runAnalysis();
+}
+
+function removeStrat(idx) {
+  alert('Estrategia eliminada del portfolio. En la versión completa esto actualiza el análisis en tiempo real.');
+}
+
+function corrColor(v) {
+  if(v>=0.7)  return {bg:'#C0392B',fg:'#fff'};
+  if(v>=0.3)  return {bg:'#B8860B',fg:'#fff'};
+  return {bg:'#1A7A4A',fg:'#fff'};
+}
+
+function runAnalysis() {
+  const corrs = [
+    [null, 0.14, -0.08],
+    [0.14, null,  0.22],
+    [-0.08, 0.22, null],
+  ];
+  const ids = [['c01','c02'],['c10','c12'],['c20','c21']];
+  const vals = [[0.14,-0.08],[0.14,0.22],[-0.08,0.22]];
+  ids.forEach((row,i) => row.forEach((id,j) => {
+    const el = document.getElementById(id);
+    if(!el) return;
+    const v = vals[i][j];
+    const {bg,fg} = corrColor(Math.abs(v));
+    el.style.background = bg;
+    el.style.color = fg;
+    el.textContent = (v>=0?'+':'')+v.toFixed(2);
+    el.className = 'corr-cell';
+  }));
+
+  const w = pbAllocs.map(a=>a/100);
+  const rets  = [38.2, 22.7, 44.1];
+  const srs   = [1.87, 1.42, 2.11];
+  const dds   = [12.4, 8.1, 9.3];
+  const pfs   = [2.34, 1.92, 2.71];
+  const retP  = rets.reduce((s,r,i)=>s+r*w[i],0).toFixed(1);
+  const srP   = srs.reduce((s,r,i)=>s+r*w[i],0).toFixed(2);
+  const ddP   = (dds.reduce((s,d,i)=>s+d*w[i],0)*0.78).toFixed(1);
+  const pfP   = pfs.reduce((s,p,i)=>s+p*w[i],0).toFixed(2);
+
+  const r=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v};
+  r('pb-ret','+'+retP+'%'); r('pb-sr',srP); r('pb-dd','-'+ddP+'%'); r('pb-pf',pfP);
+
+  // Health
+  const allCorrsLow = Math.max(...vals.flat().map(Math.abs)) < 0.3;
+  const health = Math.round(65 + (allCorrsLow?13:0) + Math.min(10, parseFloat(srP)*4));
+  const hf = document.getElementById('health-fill'), hs = document.getElementById('health-score'), hd=document.getElementById('health-diag');
+  if(hf) hf.style.width = health+'%';
+  if(hs){ hs.textContent=health; hs.className='health-score '+(health>=75?'gain':health>=50?'gold':'loss'); }
+  if(hd) hd.textContent = health>=75?'Portfolio bien diversificado':health>=60?'Diversificación aceptable':'Alta concentración — añadir más activos';
+
+  drawPbCharts();
+}
+
+function drawPbCharts() {
+  const eqs = [
+    [100,108,115,112,121,118,130,127,138,145,142,158,165,160,172,181,178,192],
+    [100,103,107,105,110,108,113,117,115,120,123,119,125,128,126,131,135,133],
+    [100,106,114,109,118,125,122,131,140,136,148,155,151,163,172,168,179,188],
+  ];
+  const w = pbAllocs.map(a=>a/100);
+  const combined = eqs[0].map((_,i)=>Math.round(eqs.reduce((s,e,j)=>s+e[i]*w[j],0)*100)/100);
+  const mos=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic','Ene','Feb','Mar','Abr','May','Jun'];
+
+  const eqCv = document.getElementById('pb-eq-chart');
+  if(eqCv){
+    if(pbEqChart){pbEqChart.destroy();pbEqChart=null;}
+    pbEqChart = new Chart(eqCv,{type:'line',data:{labels:mos,datasets:[
+      {label:'Portfolio',data:combined.map(v=>Math.round(v*100)),borderColor:'#C9A84C',borderWidth:2.5,fill:true,backgroundColor:'rgba(201,168,76,.08)',tension:.4,pointRadius:0,order:0},
+      {label:'NQ Mom.',data:eqs[0].map(v=>Math.round(v*100)),borderColor:'rgba(24,95,165,.5)',borderWidth:1,fill:false,tension:.4,pointRadius:0,borderDash:[4,3]},
+      {label:'EURUSD',data:eqs[1].map(v=>Math.round(v*100)),borderColor:'rgba(26,122,74,.5)',borderWidth:1,fill:false,tension:.4,pointRadius:0,borderDash:[4,3]},
+      {label:'Gold',data:eqs[2].map(v=>Math.round(v*100)),borderColor:'rgba(184,134,11,.5)',borderWidth:1,fill:false,tension:.4,pointRadius:0,borderDash:[4,3]},
+    ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{font:{size:10,family:'IBM Plex Mono'},color:'#6B7694',boxWidth:12,padding:12}}},scales:{x:{ticks:{color:'#6B7694',font:{size:9,family:'IBM Plex Mono'}},grid:{color:'rgba(61,74,107,.07)'}},y:{ticks:{color:'#6B7694',font:{size:9,family:'IBM Plex Mono'},callback:v=>'$'+v.toLocaleString()},grid:{color:'rgba(61,74,107,.07)'}}}}}); }
+
+  const ddData = combined.map((v,i,arr)=>{
+    const peak = Math.max(...arr.slice(0,i+1));
+    return -Math.round((peak-v)/peak*1000)/10;
+  });
+  const ddCv = document.getElementById('pb-dd-chart');
+  if(ddCv){
+    if(pbDdChart){pbDdChart.destroy();pbDdChart=null;}
+    pbDdChart = new Chart(ddCv,{type:'line',data:{labels:mos,datasets:[{data:ddData,borderColor:'#C0392B',borderWidth:1.5,fill:true,backgroundColor:'rgba(192,57,43,.07)',tension:.4,pointRadius:0}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#6B7694',font:{size:9,family:'IBM Plex Mono'}},grid:{color:'rgba(61,74,107,.07)'}},y:{ticks:{color:'#6B7694',font:{size:9,family:'IBM Plex Mono'},callback:v=>v+'%'},grid:{color:'rgba(61,74,107,.07)'}}}}}); }
+}
+
+// Init portfolio charts on load
+setTimeout(()=>{ if(document.getElementById('pb-eq-chart')) drawPbCharts(); }, 200);
+</script>
+</body>
+</html>
